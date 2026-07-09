@@ -8,8 +8,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@nekko/journal-shared': fileURLToPath(new URL('../../packages/shared/src/index.ts', import.meta.url)),
-      '@nekko/journal-core': fileURLToPath(new URL('../../packages/core/src/index.ts', import.meta.url)),
+      '@getsu/shared': fileURLToPath(new URL('../../packages/shared/src/index.ts', import.meta.url)),
+      '@getsu/core': fileURLToPath(new URL('../../packages/core/src/index.ts', import.meta.url)),
     },
   },
   server: {

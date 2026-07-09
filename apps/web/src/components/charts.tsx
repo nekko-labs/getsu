@@ -1,4 +1,4 @@
-import { MONTH_ABBR } from '@nekko/journal-core';
+import { MONTH_ABBR } from '@getsu/core';
 
 /** 12 vertical bars, one per month. `colors` optionally tints each bar. */
 export function MonthBars({

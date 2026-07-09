@@ -10,7 +10,7 @@ import {
   draftYearInReview,
   mockProvider,
   type Month,
-} from '@nekko/journal-core';
+} from '@getsu/core';
 import { useVault } from '../state/store';
 import { PageHeader, Section } from '../components/ui';
 import { Markdown } from '../components/markdown';

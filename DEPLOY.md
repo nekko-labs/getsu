@@ -1,23 +1,30 @@
-# Deploying Nekko Journal
+# Deploying Getsu
 
-Nekko Journal is **local-first**. The free tier needs no backend at all — it's a static site that stores everything in the browser. Cloud sync (the $2/mo tier) adds Supabase. Hosting is Vercel (the Nekko Labs default).
+Getsu is **local-first**. The free tier needs no backend at all — it's a static site that stores everything in the browser. Cloud sync (the $2/mo tier) adds Supabase. Hosting is Vercel (the Nekko Labs default).
 
 ---
 
-## 1. Host the app on Vercel (free tier works with zero backend)
+## 1. Host on Vercel (free tier works with zero backend)
 
-The repo already has [`vercel.json`](vercel.json) configured for the npm-workspaces monorepo.
+The repo ships as **one Vercel project** at `getsu.app`. The combined build in
+[`scripts/build-site.mjs`](scripts/build-site.mjs) assembles a single static output:
 
-**Option A — Vercel dashboard (recommended):**
-1. Go to vercel.com → **Add New → Project** → import `nekko-labs/nekko-journal`.
-2. Vercel reads `vercel.json` (build `npm run build`, output `apps/web/dist`). Leave the defaults.
-3. Deploy. That's it — the free, local-first app is live. (The app uses `HashRouter`, so no SPA rewrite rules are needed.)
+- `/` → the marketing landing page (`apps/site/`)
+- `/app/` → the local-first app (`apps/web/dist`; Vite `base: './'` lets it run under a subpath, and it uses `HashRouter`, so no SPA rewrites are needed)
+
+[`vercel.json`](vercel.json) is configured for this: build `npm run build:site`, output `_site`, `cleanUrls: true`.
+
+**Option A — Vercel dashboard:**
+1. Go to vercel.com → **Add New → Project** → import `nekko-labs/getsu`.
+2. Vercel reads `vercel.json`. Leave the defaults.
+3. Deploy, then add the domain `getsu.app` (and `gatsu.app` as a redirect to it) under **Settings → Domains**.
 
 **Option B — CLI:**
 ```bash
 npm i -g vercel
-vercel            # first run links/creates the project
-vercel --prod     # production deploy
+vercel link                 # link to the nekkolabs team project
+vercel --prod               # production deploy
+vercel domains add getsu.app
 ```
 
 > Connecting the GitHub repo gives you automatic preview deploys on every PR and production deploys on merge to `main`.

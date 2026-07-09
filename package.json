@@ -1,5 +1,5 @@
 {
-  "name": "nekko-journal",
+  "name": "getsu",
   "private": true,
   "version": "0.1.0",
   "description": "A monthly journaling and goal-tracking app — calm, anti-streak, local-first. Set yearly goals, break them into months, capture highlights, struggles, and photos, and look back at your life at a month scale.",
@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "npm run dev --workspace apps/web",
     "build": "npm run build --workspace packages/shared && npm run build --workspace packages/core && npm run build --workspace apps/web",
+    "build:site": "node scripts/build-site.mjs",
     "test": "npm run test --workspace packages/core",
     "e2e": "npm run e2e --workspace apps/web",
     "lint": "tsc -b --noEmit || true"

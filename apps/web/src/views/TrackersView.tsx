@@ -9,7 +9,7 @@ import {
   updateTracker,
   removeTracker,
   archiveTracker,
-} from '@nekko/journal-core';
+} from '@getsu/core';
 import { useVault } from '../state/store';
 
 const KINDS: { kind: TrackerKind; label: string; hint: string }[] = [

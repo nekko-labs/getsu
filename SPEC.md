@@ -4,13 +4,13 @@ last-updated: 2026-07-09
 owner: Philip
 ---
 
-# Spec — Nekko Journal
+# Spec — Getsu
 
 > **This is the source of truth for the project.** It describes *what* we're building and *why* — vision, users, journeys, the feature set, and what success looks like. It is **not** about stack or technical design (that's `TASKS.md`). It is a **living artifact**: every prompt that adds or changes a feature updates this file so it always describes the system as it actually is and intends to be. The verbatim origin ask lives in [original-prompt.md](original-prompt.md).
 
 ## Vision
 
-**Nekko Journal** is a **monthly** journaling and goal-tracking app. It exists because daily journals and habit trackers become a chore — you miss a day, feel guilty, and drop off. A **month** is the right unit: long enough that showing up isn't a burden, short enough to remember what actually happened and to course-correct on goals.
+**Getsu** is a **monthly** journaling and goal-tracking app. It exists because daily journals and habit trackers become a chore — you miss a day, feel guilty, and drop off. A **month** is the right unit: long enough that showing up isn't a burden, short enough to remember what actually happened and to course-correct on goals.
 
 The promise: *Set goals for the year, break them into months, and actually remember and achieve them — while building a beautiful, lookback-able record of your life at a month scale.*
 
@@ -22,11 +22,11 @@ The promise: *Set goals for the year, break them into months, and actually remem
 
 ## Why It Exists
 
-People want to reflect, track goals, and keep a record — but the tools that exist demand daily input and punish gaps, so people drop off and lose the record entirely. Nekko Journal makes the monthly cadence a *feature, not a limitation*: ~12 richer sessions a year instead of 365 anxious ones.
+People want to reflect, track goals, and keep a record — but the tools that exist demand daily input and punish gaps, so people drop off and lose the record entirely. Getsu makes the monthly cadence a *feature, not a limitation*: ~12 richer sessions a year instead of 365 anxious ones.
 
 ### What we're beating, and how
 
-- **Beat daily journals (Day One, Stoic)**: they demand daily input and punish gaps. Nekko Journal asks for ~12 sessions a year, each richer and more reflective. No guilt.
+- **Beat daily journals (Day One, Stoic)**: they demand daily input and punish gaps. Getsu asks for ~12 sessions a year, each richer and more reflective. No guilt.
 - **Beat habit/streak trackers (Habitica, Streaks)**: streaks optimize for not-breaking-the-chain, which collapses on the first miss. Monthly trackers measure *trends and totals* ("ran 8 times in May", "read 2 books"), which survive an off day.
 - **Beat a paper bullet journal**: searchable, photos inline, goal progress computed, "look back" for free, syncable across devices.
 - **Inspired by Year in Review / Spotify Wrapped**: the lookback/year-in-review is a first-class, delightful surface — not an afterthought.
@@ -86,7 +86,7 @@ Living catalog of capabilities, grouped by area. Marked `[shipped]` / `[in progr
 - **Simplified welcome** `[shipped]` — the first screen is just the title, "one month at a time", and one animated inspirational CTA (a teal underline that flows into an arrow). Shown once per device.
 - **Calm dark/light theming** `[shipped]` — CSS-variable theme with `data-theme`, warm-paper **calm-ocean** palette (teal accent `#3e8fa0` / `#6fb3c2` dark), generous whitespace.
 - **Local-first vault (zero-config)** `[shipped]` — IndexedDB persistence + seeded demo data so the app is alive on first run with no setup.
-- **Open a real local folder** `[shipped]` — on Chromium (File System Access API), open a folder on disk as your vault. It's written as a human-browsable folder of files (`years/YYYY.json`, `months/YYYY-MM.md` with frontmatter, `.nekko/*.json`) and mirrored on every edit; reconnects after a reload. Truly own-your-data: the journal is plain files you can read, back up, or sync yourself.
+- **Open a real local folder** `[shipped]` — on Chromium (File System Access API), open a folder on disk as your vault. It's written as a human-browsable folder of files (`years/YYYY.json`, `months/YYYY-MM.md` with frontmatter, `.getsu/*.json`) and mirrored on every edit; reconnects after a reload. Truly own-your-data: the journal is plain files you can read, back up, or sync yourself.
 
 ### Year surface
 - **Semantic zoom (Years / Year / Timeline)** `[shipped]` — segmented control + ctrl+scroll to move between a multi-year overview, the month grid, and a scrolling timeline.
@@ -125,7 +125,7 @@ Living catalog of capabilities, grouped by area. Marked `[shipped]` / `[in progr
 - **JSON export / import** `[shipped]` — own-your-data export + import from the You surface.
 - **Open a real local folder** `[shipped]` — see Foundation & shell: the vault can live as a folder of plain files on disk (File System Access), mirrored on every edit.
 - **Cross-device sync (Premium)** `[in progress]` — **no-backend, client-to-cloud**: whole-vault last-write-wins snapshot (`reconcileVaults` in core). A working **Supabase** snapshot ships on both web and native (native via plain fetch, no native module; free tier stays fully local when unconfigured). The **iCloud** (Apple) and **Google Drive appData** (Android) providers slot into the same seam and are a native-module handoff.
-- **Siri & agent integration (Premium)** `[shipped, core]` — a provider-agnostic command layer in core (`applyIntent` / `parseIntent`: add a goal, write/append the month, add a highlight, set mood) drives both a `nekkojournal://intent?phrase=…` deep link (Shortcuts / agent-callable today) and the future iOS App Intents. The native App Intents plugin (Swift) is a dev-build handoff.
+- **Siri & agent integration (Premium)** `[shipped, core]` — a provider-agnostic command layer in core (`applyIntent` / `parseIntent`: add a goal, write/append the month, add a highlight, set mood) drives both a `getsu://intent?phrase=…` deep link (Shortcuts / agent-callable today) and the future iOS App Intents. The native App Intents plugin (Swift) is a dev-build handoff.
 - **Cloud photo storage** `[planned]` — move photos out of the snapshot into object storage with signed URLs before promoting "cloud photos".
 - **Live deploy + billing** `[planned]` — real Supabase project + Vercel deploy + App Store/Play/Stripe billing (handoff to Philip; needs credentials).
 
@@ -133,7 +133,7 @@ Living catalog of capabilities, grouped by area. Marked `[shipped]` / `[in progr
 - **Responsive desktop + mobile web** `[shipped]` — one web app: bottom tabs + full-bleed on mobile, top nav + centered column on desktop.
 - **Marketing site** `[shipped]` — a self-contained static landing page (`apps/site/`) in the app's ocean design: mood-grid hero, feature grid, the free/premium split, and a live-demo CTA. Deploy to Vercel + the real demo URL is a handoff to Philip.
 - **Native iOS/Android (Expo)** `[shipped]` — a real Expo React Native app (`apps/native`) sharing `packages/core` + `packages/shared`: Year / Goals / Insights / You + Month, markdown journal, goal placement, sync + Siri/Shortcuts wiring, same ocean design. Runs local-first today; store publishing is part of the billing/deploy handoff.
-- **Installable PWA** `[shipped]` — web app manifest + maskable icon + offline service worker (runtime cache, shell fallback), so Nekko installs to the home screen and works offline.
+- **Installable PWA** `[shipped]` — web app manifest + maskable icon + offline service worker (runtime cache, shell fallback), so Getsu installs to the home screen and works offline.
 - **Gentle monthly nudge** `[shipped]` — at most one calendar-month reminder (Web Notification), and only if the current month isn't journaled yet; tapping it opens that month. Opt-in from You; no daily nags, no streaks.
 - **Marketing site + live demo** `[planned]` — Vercel config + DEPLOY.md done; actual deploy is Philip's.
 - **CI / E2E** `[in progress]` — build + unit CI shipped; Playwright E2E planned.
@@ -150,7 +150,7 @@ Living catalog of capabilities, grouped by area. Marked `[shipped]` / `[in progr
 ## Scope Boundaries
 
 - **Not a daily journal or habit/streak tracker.** No daily input requirement, no streaks, no broken-streak guilt, no daily nags. The monthly cadence is intentional and non-negotiable.
-- **Not coupled to nekko-notes.** Standalone product with its own repo and app, despite the local-first overlap.
+- **Not coupled to getsu-notes.** Standalone product with its own repo and app, despite the local-first overlap.
 - **Core journaling never requires a server.** AI and cloud sync are optional enhancements that degrade gracefully; the free, local-first app is the complete product.
 - **Free tier is the full app**: Insights/analytics, unlimited entries/goals, the monthly markdown journal, local photos (up to 3/month), offline, JSON export, no account. **Premium ($6/mo)** is reach & safety only: cross-device sync, Siri/agent, 25 photos/month, cloud backup + web access. Never a paywall on writing.
 

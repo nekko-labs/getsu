@@ -1,7 +1,7 @@
-import { type Month, type Goal, MONTH_NAMES, monthLabel } from '@nekko/journal-shared';
+import { type Month, type Goal, MONTH_NAMES, monthLabel } from '@getsu/shared';
 import { type YearInReview } from './lookback.js';
 
-// Provider-agnostic AI assistant for Nekko Journal. The default is Claude, but
+// Provider-agnostic AI assistant for Getsu. The default is Claude, but
 // nothing here imports an SDK or touches the network: this module defines the
 // operations, the prompts they'd send to a real model, AND a deterministic
 // heuristic fallback ("mock mode") used whenever no provider/key is configured.

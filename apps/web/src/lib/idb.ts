@@ -1,7 +1,7 @@
 import { openDB, type IDBPDatabase } from 'idb';
-import { type Vault } from '@nekko/journal-core';
+import { type Vault } from '@getsu/core';
 
-const DB_NAME = 'nekko-journal';
+const DB_NAME = 'getsu';
 const STORE = 'vault';
 const HANDLE_STORE = 'handles';
 const KEY = 'main';

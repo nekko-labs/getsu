@@ -1,13 +1,13 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { type AIProvider, type AICompletionInput, mockProvider } from '@nekko/journal-core';
+import { type AIProvider, type AICompletionInput, mockProvider } from '@getsu/core';
 
 // Web AI layer: turns the user's locally-stored, bring-your-own Claude key into
 // a core AIProvider. No key → the offline mock provider (the assistant still
 // works, just heuristically). The key lives only in localStorage — never in the
 // vault, so it isn't exported, synced, or written to the folder.
 
-const KEY_STORAGE = 'nekko-ai-key';
-const MODEL_STORAGE = 'nekko-ai-model';
+const KEY_STORAGE = 'getsu-ai-key';
+const MODEL_STORAGE = 'getsu-ai-model';
 const DEFAULT_MODEL = 'claude-opus-4-8';
 
 export function getStoredKey(): string {

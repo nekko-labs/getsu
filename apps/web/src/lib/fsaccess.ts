@@ -4,7 +4,7 @@ import {
   serializeVaultToFiles,
   parseVaultFromFiles,
   VAULT_MARKER,
-} from '@nekko/journal-core';
+} from '@getsu/core';
 import { saveFolderHandle, loadFolderHandle, clearFolderHandle } from './idb';
 
 // File System Access glue: open a real local folder as the vault and read/write
@@ -89,11 +89,11 @@ async function writeFile(root: FsDirHandle, path: string, content: string): Prom
   await writable.close();
 }
 
-/** Does this folder already contain a Nekko Journal vault? */
+/** Does this folder already contain a Getsu vault? */
 export async function folderHasVault(handle: FsDirHandle): Promise<boolean> {
   try {
-    const nekko = await handle.getDirectoryHandle('.nekko');
-    await nekko.getFileHandle('vault.json');
+    const getsu = await handle.getDirectoryHandle('.getsu');
+    await getsu.getFileHandle('vault.json');
     return true;
   } catch {
     return false;

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Nekko Journal: "warm paper, calm ocean" design language.
+/* Getsu: "warm paper, calm ocean" design language.
    Warm cream/dark paper neutrals, soft diffuse shadows, generous radii,
    one calm ocean-teal accent, mood as a color primitive. */
 
@@ -182,3 +182,44 @@ body {
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------- Opening animation (Splash) ---------- */
+.getsu-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #201a3a 0%, #3a285e 100%);
+  animation: splash-in 0.4s var(--ease-out-quint) both;
+  cursor: pointer;
+}
+.getsu-splash.is-leaving { animation: splash-out 0.46s var(--ease-out-quint) forwards; }
+.getsu-splash-art { width: min(78vw, 340px); height: auto; }
+
+.s-glow { transform-origin: 252px 206px; animation: splash-bloom 1s var(--ease-out-quint) 0.2s both; }
+.s-star { opacity: 0; animation: splash-fade 0.7s var(--ease-out-quint) 0.5s both; }
+.s-moon { animation: splash-fade 0.7s var(--ease-out-quint) 0.35s both; }
+.s-cat  { transform-origin: 256px 452px; animation: splash-settle 0.7s var(--ease-out-quint) 0.55s both; }
+.s-eyes { opacity: 0; transform-origin: 258px 298px; animation: splash-blink 0.5s var(--ease-out-quint) 1.3s both; }
+.s-word { fill: #fff6dc; font-family: Fraunces, Georgia, serif; font-size: 52px; font-weight: 600; letter-spacing: -1px;
+  opacity: 0; animation: splash-rise 0.7s var(--ease-out-quint) 1.2s both; }
+.s-tag  { fill: #c9b8e6; font-family: Inter, system-ui, sans-serif; font-size: 19px;
+  opacity: 0; animation: splash-rise 0.7s var(--ease-out-quint) 1.4s both; }
+
+@keyframes splash-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes splash-out { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
+@keyframes splash-bloom { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+@keyframes splash-fade { to { opacity: 0.8; } }
+@keyframes splash-settle { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes splash-blink { from { opacity: 0; transform: scaleY(0.05); } to { opacity: 1; transform: scaleY(1); } }
+@keyframes splash-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Reduced motion: no choreography, just a brief calm fade. */
+.getsu-splash.is-reduced .s-moon,
+.getsu-splash.is-reduced .s-cat,
+.getsu-splash.is-reduced .s-eyes,
+.getsu-splash.is-reduced .s-word,
+.getsu-splash.is-reduced .s-tag,
+.getsu-splash.is-reduced .s-glow,
+.getsu-splash.is-reduced .s-star { opacity: 1; transform: none; }

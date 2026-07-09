@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { type Vault, type Plan, seedDemoVault, reconcileVaults } from '@nekko/journal-core';
+import { type Vault, type Plan, seedDemoVault, reconcileVaults } from '@getsu/core';
 import { LIGHT, DARK, type Tokens } from './theme';
 import { getSyncProvider } from './sync';
 
-const STORAGE_KEY = 'nekko.journal.vault.v1';
-const DEVICE_KEY = 'nekko.journal.device.v1';
+const STORAGE_KEY = 'getsu.journal.vault.v1';
+const DEVICE_KEY = 'getsu.journal.device.v1';
 const CURRENT_YEAR = 2026;
 const CURRENT_MONTH = 6;
 

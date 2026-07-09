@@ -1,5 +1,5 @@
 {
-  "name": "@nekko/journal-web",
+  "name": "@getsu/web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",
-    "@nekko/journal-core": "*",
-    "@nekko/journal-shared": "*",
+    "@getsu/core": "*",
+    "@getsu/shared": "*",
     "@supabase/supabase-js": "^2.45.0",
     "idb": "^8.0.0",
     "lucide-react": "^0.469.0",

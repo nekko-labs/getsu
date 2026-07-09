@@ -1,4 +1,4 @@
-import { type Vault } from '@nekko/journal-core';
+import { type Vault } from '@getsu/core';
 
 /**
  * Cross-device sync (Premium). Design goal: NO backend of our own — write the

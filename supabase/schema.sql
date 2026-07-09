@@ -1,4 +1,4 @@
--- Nekko Journal — Supabase schema for optional cloud sync (the paid tier).
+-- Getsu — Supabase schema for optional cloud sync (the paid tier).
 -- Run this in the Supabase SQL editor after creating your project.
 --
 -- Design: the free app is 100% local (IndexedDB). When a user opts into Cloud,

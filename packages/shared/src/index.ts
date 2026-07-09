@@ -1,6 +1,6 @@
-// @nekko/journal-shared — types and helpers shared across core, web, and (later) native.
+// @getsu/shared — types and helpers shared across core, web, and (later) native.
 //
-// The atomic unit of Nekko Journal is the Month ("YYYY-MM"). Years hold goals and a
+// The atomic unit of Getsu is the Month ("YYYY-MM"). Years hold goals and a
 // theme; goals break down into per-month intentions; months hold reflection, highlights,
 // optional struggles, photos, trackers, and goal check-ins.
 

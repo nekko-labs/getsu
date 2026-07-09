@@ -1,5 +1,5 @@
 {
-  "name": "@nekko/journal-core",
+  "name": "@getsu/core",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@nekko/journal-shared": "*",
+    "@getsu/shared": "*",
     "nanoid": "^5.0.0"
   },
   "devDependencies": {

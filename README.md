@@ -1,4 +1,4 @@
-# Nekko Journal 🌙
+# Getsu 🌙
 
 A **monthly** journaling and goal-tracking app — the calm antidote to daily-habit apps that become a chore and get abandoned.
 

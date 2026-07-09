@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { X, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
-import { type PhotoRef } from '@nekko/journal-core';
+import { type PhotoRef } from '@getsu/core';
 
 interface LightboxProps {
   photos: PhotoRef[];

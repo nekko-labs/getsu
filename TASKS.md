@@ -4,7 +4,7 @@ last-updated: 2026-07-09
 owner: Philip
 ---
 
-# Execution Plan — Nekko Journal
+# Execution Plan — Getsu
 
 > Converted from executionplan.md on 2026-06-29. ✅ = done per the prior plan; Part 1 below is the technical plan, Part 2 is the task checklist.
 
@@ -18,7 +18,7 @@ owner: Philip
 
 ## Stack
 
-Decided — mirrors nekko-notes; **do not relitigate**.
+Decided — mirrors getsu-notes; **do not relitigate**.
 
 - **Monorepo**: npm workspaces. *(pnpm and yarn are broken on this machine — do not use them.)*
 - **Web app** (`apps/web`): Vite 6 + React 18 + TypeScript 5 (strict) + **Tailwind CSS v3** (not v4) + Zustand. React Router for view routing (HashRouter for Pages hosting).
@@ -59,7 +59,7 @@ A vault is a folder of files:
 - `years/YYYY.json` — yearly goals, theme/word-of-the-year, settings.
 - `months/YYYY-MM.md` — one Markdown file per month. YAML frontmatter holds structured fields (highlights, struggles, trackers, photo refs, goal check-ins, mood); the Markdown body is the free-form reflection.
 - `media/` — photos (referenced by month entries).
-- `.nekko/` — app metadata (settings, theme, tracker definitions, cache).
+- `.getsu/` — app metadata (settings, theme, tracker definitions, cache).
 
 ## Data Model
 
@@ -90,7 +90,7 @@ Month  { id: MonthKey ("YYYY-MM"), year, month (1-12),
 
 Tracker { id, name, kind: 'number'|'boolean'|'rating'|'count',
           unit?, target?, color?, icon?, active: boolean }
-          // defined once (in .nekko), valued per month
+          // defined once (in .getsu), valued per month
 
 PhotoRef { id, src (vault path or blob key), caption?, width?, height? }
 ```
@@ -109,7 +109,7 @@ Trackers measure **monthly totals/trends**, not daily streaks. A tracker is a co
 
 ## Infrastructure & Deployment
 
-- **Code repo**: `C:\Users\phili\code\nekko-journal` → GitHub **nekko-labs/nekko-journal** (public, MIT — Nekko Labs org).
+- **Code repo**: `C:\Users\phili\code\getsu` → GitHub **nekko-labs/getsu** (public, MIT — Nekko Labs org).
 - **Hosting**: Vercel (config + `supabase/schema.sql` (RLS) + `.env.example` + `DEPLOY.md` runbook done). Actual Supabase project + Vercel deploy + Stripe billing is a handoff to Philip (needs credentials).
 - **CI**: build + unit tests via GitHub Actions (landed via PR #1). Playwright E2E planned.
 - **Workflow**: land code via **PRs** — branch → push → `gh pr create` → merge immediately, no review (auto-merge; PRs exist for history). Keep PR descriptions to a few bullets; concise commit subjects. The obsurdian vault keeps its direct-commit-to-main convention.
@@ -127,7 +127,7 @@ Direction locked (Dawn-inspired refresh, PR #2; polished via the impeccable tool
 
 ## Coding Conventions
 
-Mirror nekko-notes conventions; global defaults in `../../knowledgebase/principles/coding.md` (this file overrides them):
+Mirror getsu-notes conventions; global defaults in `../../knowledgebase/principles/coding.md` (this file overrides them):
 
 - npm workspaces (no pnpm/yarn — broken on this machine).
 - TypeScript strict.
@@ -147,8 +147,8 @@ Mirror nekko-notes conventions; global defaults in `../../knowledgebase/principl
 
 ## Key Technical Decisions
 
-- **Standalone product** — own repo (`nekko-labs/nekko-journal`) + app, not coupled to nekko-notes, despite the local-first overlap. Keeps the product story focused.
-- **Native = a real Expo RN app**, not a WebView shell (unlike nekko-notes), because Nekko Journal has no canvas/DOM-bound editor — the UI is RN-friendly and can share `packages/core` + `packages/shared`.
+- **Standalone product** — own repo (`nekko-labs/getsu`) + app, not coupled to getsu-notes, despite the local-first overlap. Keeps the product story focused.
+- **Native = a real Expo RN app**, not a WebView shell (unlike getsu-notes), because Getsu has no canvas/DOM-bound editor — the UI is RN-friendly and can share `packages/core` + `packages/shared`.
 - **Nekko Labs default stack = Supabase + Vercel** (Philip's org-wide call).
 - **Free/paid split (honest)**: free = the *complete* app (all surfaces incl. Insights, unlimited entries/goals, monthly markdown journal, local photos up to 3/month, offline, JSON export, no account). **Premium $6/mo** ($3 intro 3 months, occasional $3 sale) = reach & safety only (cross-device sync, Siri/agent, 25 photos/month, encrypted backup, web access). Insights are NOT gated.
 - **v7 consolidation (2026-07-09)**: the app is reframed around two things — a per-month markdown journal and goals dragged onto the months where they'll happen. Nav is a phone-first tab bar (Year/Goals/Insights/You); Year has semantic zoom (Years/Year/Timeline); Month is journal + goals-with-photos. Palette moved indigo → **ocean teal**. Highlights/struggles/trackers/mood stay in the model (import/migration) but the UI folds prose into the journal.
@@ -187,7 +187,7 @@ Mirror nekko-notes conventions; global defaults in `../../knowledgebase/principl
 - [x] **T1** — Project docs in obsurdian (README, AGENTS, original-prompt, build prompt, memory).
 
 ### Phase 1 — Foundation
-- [x] **T2** — Monorepo scaffold (npm workspaces), tsconfig (strict), Tailwind v3, MIT license, app README, `.gitignore`, git init + GitHub repo (public `nekko-labs/nekko-journal`). · [spec](SPEC.md#foundation--shell)
+- [x] **T2** — Monorepo scaffold (npm workspaces), tsconfig (strict), Tailwind v3, MIT license, app README, `.gitignore`, git init + GitHub repo (public `nekko-labs/getsu`). · [spec](SPEC.md#foundation--shell)
 - [x] **T3** — `packages/shared` — core types (Year, Goal, Month, Tracker, PhotoRef, Settings) + MonthKey helpers. · [spec](SPEC.md#foundation--shell)
 - [x] **T4** — `packages/core` — vault file model (frontmatter round-trip), month/goal/tracker ops, lookback aggregation, seed demo data, **10 Vitest tests passing**. · [spec](SPEC.md#foundation--shell)
 - [x] **T5** — App shell: nav (Year/Month/Goals/Look back), dark/light theming, Zustand vault store, React Router (HashRouter for Pages). · [spec](SPEC.md#foundation--shell)
@@ -220,7 +220,7 @@ Mirror nekko-notes conventions; global defaults in `../../knowledgebase/principl
 ### Phase 4h — Native completion + sync + agent/Siri (2026-07-09)
 - [x] **T20 / T21** — Real Expo RN app (`apps/native`, outside the web workspace so it never touches web CI) sharing `packages/core` + `packages/shared`: Year / Goals / Insights / You tabs + pushed Month (markdown journal + goals + photo counter). Ocean tokens mirror the web. · Done: 2026-07-09 · [spec](SPEC.md#platform--growth)
 - [x] **T22** — Cross-device sync (Premium): `SyncProvider` seam with a **working Supabase snapshot** provider (fetch/PostgREST, no native module, config via `EXPO_PUBLIC_SUPABASE_*`), `store.syncNow()` reconciling via core `reconcileVaults`, and a You → Sync row. No-backend **iCloud + Google Drive appData** providers slot into the same interface (native-module handoff, documented in `apps/native/README.md`). · Done: 2026-07-09 · [spec](SPEC.md#own-your-data--sync)
-- [x] **T23** — Siri / agent integration: provider-agnostic command layer in core `intents.ts` (`applyIntent` / `parseIntent` / `resolveGoalByTitle` / `intentCatalog`; 8 new Vitest, 43 total). Native `runPhrase` / `runIntent` + `nekkojournal://intent?phrase=…` deep link wired in `App.tsx`, plus a Siri/Shortcuts cheat-sheet in You. Native iOS App Intents plugin (Swift `AppIntent` + Shortcuts donation) is a dev-build handoff. · Done: 2026-07-09 · [spec](SPEC.md#own-your-data--sync)
+- [x] **T23** — Siri / agent integration: provider-agnostic command layer in core `intents.ts` (`applyIntent` / `parseIntent` / `resolveGoalByTitle` / `intentCatalog`; 8 new Vitest, 43 total). Native `runPhrase` / `runIntent` + `getsu://intent?phrase=…` deep link wired in `App.tsx`, plus a Siri/Shortcuts cheat-sheet in You. Native iOS App Intents plugin (Swift `AppIntent` + Shortcuts donation) is a dev-build handoff. · Done: 2026-07-09 · [spec](SPEC.md#own-your-data--sync)
 
 ### Phase 4g — Playwright E2E (2026-07-09)
 - [x] **T16** — Playwright E2E (`apps/web/e2e/journey.spec.ts`, 6 specs) covering onboarding→year, month journaling, offline journaling-assist prompt insert, goals, insights, tracker creation. Runs against a `vite preview` build; new `e2e` job in CI installs Chromium and uploads the report. All 6 pass locally. · Done: 2026-07-09
@@ -239,7 +239,7 @@ Mirror nekko-notes conventions; global defaults in `../../knowledgebase/principl
 - [x] **T11** — Photos polish: client-side downscale + re-encode on upload (`lib/image.ts`, caps longest edge at 1600px so the vault snapshot stays small; stores width/height), multi-select upload honoring the plan limit per file, editable captions, and a full-screen `Lightbox` (prev/next, keyboard Esc/←/→, caption editor, delete). Verified in preview. · Done: 2026-07-09 · [spec](SPEC.md#month-surface)
 
 ### Phase 4b — Local-first folder vault (2026-07-09)
-- [x] **T6** — Local-first vault: File System Access "open folder" support. Core `serializeVaultToFiles`/`parseVaultFromFiles` own the human-browsable folder-of-files layout (`years/YYYY.json`, `months/YYYY-MM.md`, `.nekko/*.json`) with a lossless round-trip (4 new Vitest); web `lib/fsaccess.ts` does the I/O, handle persisted in IndexedDB, reconnect after reload. · Done: 2026-07-09 · [spec](SPEC.md#own-your-data--sync)
+- [x] **T6** — Local-first vault: File System Access "open folder" support. Core `serializeVaultToFiles`/`parseVaultFromFiles` own the human-browsable folder-of-files layout (`years/YYYY.json`, `months/YYYY-MM.md`, `.getsu/*.json`) with a lossless round-trip (4 new Vitest); web `lib/fsaccess.ts` does the I/O, handle persisted in IndexedDB, reconnect after reload. · Done: 2026-07-09 · [spec](SPEC.md#own-your-data--sync)
 - [x] **T13** — Own-your-data: File System Access folder save — the vault mirrors to the connected folder on every edit (debounced); "Local folder" row in You (open / reconnect / disconnect). · Done: 2026-07-09 · [spec](SPEC.md#own-your-data--sync)
 
 ### Phase 4 — v7 ocean redesign + plans (2026-07-09)

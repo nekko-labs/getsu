@@ -6,8 +6,8 @@
     "jsx": "react-jsx",
     "types": ["vite/client", "node"],
     "paths": {
-      "@nekko/journal-shared": ["../../packages/shared/src/index.ts"],
-      "@nekko/journal-core": ["../../packages/core/src/index.ts"]
+      "@getsu/shared": ["../../packages/shared/src/index.ts"],
+      "@getsu/core": ["../../packages/core/src/index.ts"]
     }
   },
   "include": ["src", "vite.config.ts"]

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { monthKey, parseMonthKey, monthLabel, yearMonthKeys } from '@nekko/journal-shared';
-import { photoLimit } from '@nekko/journal-shared';
+import { monthKey, parseMonthKey, monthLabel, yearMonthKeys } from '@getsu/shared';
+import { photoLimit } from '@getsu/shared';
 import {
   createEmptyVault,
   ensureMonth,

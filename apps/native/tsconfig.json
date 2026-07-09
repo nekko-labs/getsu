@@ -5,8 +5,8 @@
     "jsx": "react-jsx",
     "moduleResolution": "bundler",
     "paths": {
-      "@nekko/journal-core": ["../../packages/core/src/index.ts"],
-      "@nekko/journal-shared": ["../../packages/shared/src/index.ts"]
+      "@getsu/core": ["../../packages/core/src/index.ts"],
+      "@getsu/shared": ["../../packages/shared/src/index.ts"]
     }
   },
   "include": ["index.ts", "App.tsx", "src/**/*"]

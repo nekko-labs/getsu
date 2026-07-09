@@ -7,7 +7,7 @@ import {
   journaledYears,
   buildYearStrip,
   type YearStrip,
-} from '@nekko/journal-core';
+} from '@getsu/core';
 import { useVault } from '../state/store';
 import { PageHeader } from '../components/ui';
 

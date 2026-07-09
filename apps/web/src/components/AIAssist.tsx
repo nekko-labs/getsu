@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Sparkles, Plus, Loader2 } from 'lucide-react';
-import { type Month, type Goal, reflectionPrompts, summarizeMonth, mockProvider } from '@nekko/journal-core';
+import { type Month, type Goal, reflectionPrompts, summarizeMonth, mockProvider } from '@getsu/core';
 import { getAIProvider, aiConfigured } from '../lib/ai';
 
 /**

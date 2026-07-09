@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { type Vault, type Plan, seedDemoVault } from '@nekko/journal-core';
+import { type Vault, type Plan, seedDemoVault } from '@getsu/core';
 import { loadVault, saveVault, clearVault } from '../lib/idb';
 import {
   type FsDirHandle,

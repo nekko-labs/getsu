@@ -1,5 +1,5 @@
 {
-  "name": "@nekko/journal-native",
+  "name": "@getsu/native",
   "version": "0.1.0",
   "private": true,
   "main": "index.ts",
@@ -11,8 +11,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@nekko/journal-core": "file:../../packages/core",
-    "@nekko/journal-shared": "file:../../packages/shared",
+    "@getsu/core": "file:../../packages/core",
+    "@getsu/shared": "file:../../packages/shared",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",

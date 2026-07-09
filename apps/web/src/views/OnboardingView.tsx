@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { MoveRight } from 'lucide-react';
 import { useVault } from '../state/store';
 
-export const ONBOARD_KEY = 'nekko.onboarded';
+export const ONBOARD_KEY = 'getsu.onboarded';
 
 /**
  * The first screen. Deliberately minimal: the title, one line of subtext, and a
@@ -25,7 +25,7 @@ export default function OnboardingView() {
         className="serif animate-rise text-5xl font-semibold leading-none tracking-tight sm:text-6xl"
         style={{ color: 'var(--text)' }}
       >
-        Nekko Journal
+        Getsu
       </h1>
 
       <p

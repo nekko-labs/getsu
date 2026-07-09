@@ -10,7 +10,7 @@ import {
   updateGoal,
   setGoalPlannedMonth,
   setYearTheme,
-} from '@nekko/journal-core';
+} from '@getsu/core';
 import { useVault } from '../state/store';
 
 const EMPTY_GOALS: Goal[] = [];

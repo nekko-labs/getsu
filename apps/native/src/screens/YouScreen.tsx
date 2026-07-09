@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Pressable } from 'react-native';
-import { isMonthFilled, intentCatalog } from '@nekko/journal-core';
+import { isMonthFilled, intentCatalog } from '@getsu/core';
 import { useVault } from '../store';
 import { serif, type Tokens } from '../theme';
 
@@ -67,7 +67,7 @@ export default function YouScreen() {
         ))}
       </View>
 
-      <Text style={{ textAlign: 'center', fontSize: 12, color: t.textFaint, marginTop: 40 }}>Local-first · your data stays yours{'\n'}Nekko Journal v1.0</Text>
+      <Text style={{ textAlign: 'center', fontSize: 12, color: t.textFaint, marginTop: 40 }}>Local-first · your data stays yours{'\n'}Getsu v1.0</Text>
     </ScrollView>
   );
 }

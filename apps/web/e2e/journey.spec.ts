@@ -7,13 +7,13 @@ import { test, expect, type Page } from '@playwright/test';
 /** Mark onboarding complete so tests can jump straight to a surface. */
 async function skipOnboarding(page: Page) {
   await page.addInitScript(() => {
-    try { localStorage.setItem('nekko.onboarded', '1'); } catch { /* ignore */ }
+    try { localStorage.setItem('getsu.onboarded', '1'); } catch { /* ignore */ }
   });
 }
 
 test('onboarding: welcome screen leads into the year', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Nekko Journal' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Getsu' })).toBeVisible();
   await expect(page.getByText('one month at a time')).toBeVisible();
   await page.getByRole('button', { name: 'Begin your year' }).click();
   await expect(page).toHaveURL(/#\/year\/\d{4}/);

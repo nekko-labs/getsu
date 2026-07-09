@@ -1,4 +1,4 @@
-import { type Vault } from '@nekko/journal-shared';
+import { type Vault } from '@getsu/shared';
 
 // Sync support. The MVP cloud-sync strategy is a whole-vault snapshot with
 // last-write-wins at the vault level: simple, correct for a single user across

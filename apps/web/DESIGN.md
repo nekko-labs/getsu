@@ -1,6 +1,6 @@
 # Design
 
-/ Visual system for Nekko Journal. "Warm paper, monthly ritual." Calm, editorial-but-trustworthy product UI. /
+/ Visual system for Getsu. "Warm paper, monthly ritual." Calm, editorial-but-trustworthy product UI. /
 
 ## Color
 

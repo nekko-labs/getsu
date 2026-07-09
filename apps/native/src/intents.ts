@@ -4,7 +4,7 @@ import {
   applyIntent,
   parseIntent,
   monthKey,
-} from '@nekko/journal-core';
+} from '@getsu/core';
 import { useVault } from './store';
 
 // Siri / iOS App Intents / Shortcuts + agent entry point (T23). The command
@@ -13,7 +13,7 @@ import { useVault } from './store';
 // persists. Native App Intents (a Swift `AppIntent` per action) and a Shortcuts
 // donation are added via an Expo config plugin in a dev build — that plugin
 // forwards each invocation to `runPhrase` / `runIntent` below (over a JSI bridge
-// or a `nekkojournal://` deep link). The spoken/agent reply is the returned
+// or a `getsu://` deep link). The spoken/agent reply is the returned
 // `message`.
 
 function ctx() {
@@ -42,14 +42,14 @@ export function runPhrase(phrase: string): IntentResult {
 }
 
 /**
- * Handle a `nekkojournal://intent?phrase=...` deep link (the URL scheme
+ * Handle a `getsu://intent?phrase=...` deep link (the URL scheme
  * Shortcuts / an agent opens). Wire in App.tsx via
  * `Linking.addEventListener('url', ({url}) => handleDeepLink(url))`.
  */
 export function handleDeepLink(url: string): IntentResult | null {
   try {
     const u = new URL(url);
-    if (u.protocol !== 'nekkojournal:' || u.hostname !== 'intent') return null;
+    if (u.protocol !== 'getsu:' || u.hostname !== 'intent') return null;
     const phrase = u.searchParams.get('phrase');
     return phrase ? runPhrase(phrase) : null;
   } catch {

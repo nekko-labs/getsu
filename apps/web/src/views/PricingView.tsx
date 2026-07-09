@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Check, Sparkles, HardDrive } from 'lucide-react';
-import { PHOTO_LIMIT_FREE, PHOTO_LIMIT_PREMIUM } from '@nekko/journal-core';
+import { PHOTO_LIMIT_FREE, PHOTO_LIMIT_PREMIUM } from '@getsu/core';
 import { useVault } from '../state/store';
 
 // Pricing, honestly framed: the free app is complete. Premium is reach & safety.
