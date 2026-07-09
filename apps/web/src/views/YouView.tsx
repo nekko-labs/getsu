@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { Sun, Moon, ChevronRight, Sparkles, Cloud, Bell, Download, Upload, RotateCcw, FolderOpen, Activity } from 'lucide-react';
-import { isMonthFilled } from '@nekko/journal-core';
+import { isMonthFilled } from '@getsu/core';
 import { useVault } from '../state/store';
 import { useCloud } from '../state/cloud';
 import { enableMonthlyNudge, notifyPermission } from '../lib/nudge';
 import { aiConfigured } from '../lib/ai';
+import BrandMark from '../components/BrandMark';
 
 export default function YouView() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function YouView() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `nekko-journal-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `getsu-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -107,7 +108,7 @@ export default function YouView() {
     <div className="animate-rise">
       {/* profile */}
       <div className="flex items-center gap-4 pt-2">
-        <div className="grid h-14 w-14 place-items-center rounded-full text-2xl" style={{ background: 'var(--surface-2)' }}>🌙</div>
+        <BrandMark size={56} className="shrink-0" />
         <div>
           <div className="serif text-2xl font-semibold leading-tight">Your journal</div>
           <div className="text-[13px]" style={{ color: 'var(--text-soft)' }}>{filledMonths} months · since {sinceYear}</div>
@@ -164,7 +165,7 @@ export default function YouView() {
       </div>
 
       <div className="mt-8 text-center text-[12px] leading-relaxed" style={{ color: 'var(--text-faint)' }}>
-        Local-first · your data stays yours<br />Nekko Journal v1.0
+        Local-first · your data stays yours<br />Getsu v1.0
       </div>
     </div>
   );

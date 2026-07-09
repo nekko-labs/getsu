@@ -1,4 +1,4 @@
-import { type Vault, type MonthKey, MONTH_NAMES, monthLabel } from '@nekko/journal-shared';
+import { type Vault, type MonthKey, MONTH_NAMES, monthLabel } from '@getsu/shared';
 import { addGoal, setGoalPlannedMonth, updateGoal, updateMonth, ensureMonth, activeGoals } from './vault.js';
 
 // Agent-callable command layer (T23). Siri / iOS App Intents / Shortcuts and any

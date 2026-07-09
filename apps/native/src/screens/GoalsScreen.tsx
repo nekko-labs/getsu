@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Pressable } from 'react-native';
-import { MONTH_ABBR, setGoalPlannedMonth, updateGoal, type Goal } from '@nekko/journal-core';
+import { MONTH_ABBR, setGoalPlannedMonth, updateGoal, type Goal } from '@getsu/core';
 import { useVault } from '../store';
 import { serif, type Tokens } from '../theme';
 

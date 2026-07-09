@@ -17,7 +17,7 @@ import {
   setTrackerValue,
   activeTrackers,
   countMonthPhotos,
-} from '@nekko/journal-core';
+} from '@getsu/core';
 import { useVault } from '../state/store';
 import { Markdown, MarkdownEditor } from '../components/markdown';
 import Lightbox from '../components/Lightbox';

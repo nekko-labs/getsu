@@ -4,6 +4,8 @@ import { Calendar, Target, BarChart3, User, Sparkles } from 'lucide-react';
 import { useVault } from './state/store';
 import { useCloud } from './state/cloud';
 import { runMonthlyNudge } from './lib/nudge';
+import Splash from './components/Splash';
+import BrandMark from './components/BrandMark';
 import OnboardingView, { ONBOARD_KEY } from './views/OnboardingView';
 import YearView from './views/YearView';
 import MonthView from './views/MonthView';
@@ -47,8 +49,8 @@ function TopNav() {
     <header className="hidden shrink-0 border-b md:block" style={{ borderColor: 'var(--border)', background: 'var(--bg)' }}>
       <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-3">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🌙</span>
-          <span className="serif text-lg font-semibold">Nekko Journal</span>
+          <BrandMark size={24} />
+          <span className="serif text-lg font-semibold">Getsu</span>
         </div>
         <nav className="flex items-center gap-1">
           {tabs.map((t) => {
@@ -133,6 +135,7 @@ export default function App() {
 
   return (
     <div className="flex h-full flex-col">
+      <Splash />
       {showChrome && <TopNav />}
       <main className="flex-1 overflow-y-auto">
         <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col px-5 pb-8 pt-4 sm:px-6">

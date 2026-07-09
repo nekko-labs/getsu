@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from 'react-native';
-import { MONTH_ABBR, isMonthFilled, countMonthPhotos } from '@nekko/journal-core';
+import { MONTH_ABBR, isMonthFilled, countMonthPhotos } from '@getsu/core';
 import { useVault } from '../store';
 import { serif } from '../theme';
 

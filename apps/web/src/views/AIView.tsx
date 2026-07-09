@@ -35,7 +35,7 @@ export default function AIView() {
         <h1 className="serif text-3xl font-semibold tracking-tight">Journaling assist</h1>
       </div>
       <p className="mb-6 text-[13.5px] leading-relaxed" style={{ color: 'var(--text-soft)' }}>
-        Nekko can suggest reflection prompts, summarize a month, and draft a year-in-review. It works offline with simple built-in prompts. Add your own Claude API key to make it smarter — the key stays on this device and is never synced or exported.
+        Getsu can suggest reflection prompts, summarize a month, and draft a year-in-review. It works offline with simple built-in prompts. Add your own Claude API key to make it smarter — the key stays on this device and is never synced or exported.
       </p>
 
       <div className="mb-3.5 text-[10.5px] font-semibold uppercase tracking-[1.6px]" style={{ color: 'var(--text-faint)' }}>Claude API key</div>

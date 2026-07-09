@@ -1,5 +1,5 @@
 import { createClient, type SupabaseClient, type Session } from '@supabase/supabase-js';
-import { type Vault } from '@nekko/journal-core';
+import { type Vault } from '@getsu/core';
 
 // Cloud is entirely optional. When the Supabase env vars are absent the app is a
 // fully-functional, account-free, local-first journal — `getSupabase()` returns null

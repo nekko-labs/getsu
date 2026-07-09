@@ -4,7 +4,7 @@ import {
   type Tracker,
   type Settings,
   parseMonthKey,
-} from '@nekko/journal-shared';
+} from '@getsu/shared';
 import { serializeMonth, parseMonth } from './frontmatter.js';
 import { createEmptyVault, VAULT_VERSION } from './vault.js';
 
@@ -15,9 +15,9 @@ import { createEmptyVault, VAULT_VERSION } from './vault.js';
 //
 //   years/YYYY.json      — the Year record (theme + goals)
 //   months/YYYY-MM.md    — one Markdown file per month (frontmatter + reflection)
-//   .nekko/settings.json — app settings (theme, plan, notify)
-//   .nekko/trackers.json — tracker definitions
-//   .nekko/vault.json     — a marker holding the vault version
+//   .getsu/settings.json — app settings (theme, plan, notify)
+//   .getsu/trackers.json — tracker definitions
+//   .getsu/vault.json     — a marker holding the vault version
 //
 // Photos live inline as data URLs inside each month's frontmatter, so a folder
 // is fully self-contained and round-trips losslessly.
@@ -28,8 +28,8 @@ export interface VaultFile {
   content: string;
 }
 
-/** A marker file that lets us recognize a folder as a Nekko Journal vault. */
-export const VAULT_MARKER = '.nekko/vault.json';
+/** A marker file that lets us recognize a folder as a Getsu vault. */
+export const VAULT_MARKER = '.getsu/vault.json';
 
 /** Serialize a whole vault into the folder-of-files layout. */
 export function serializeVaultToFiles(vault: Vault): VaultFile[] {
@@ -37,10 +37,10 @@ export function serializeVaultToFiles(vault: Vault): VaultFile[] {
 
   files.push({
     path: VAULT_MARKER,
-    content: JSON.stringify({ version: vault.version ?? VAULT_VERSION, app: 'nekko-journal' }, null, 2),
+    content: JSON.stringify({ version: vault.version ?? VAULT_VERSION, app: 'getsu' }, null, 2),
   });
-  files.push({ path: '.nekko/settings.json', content: JSON.stringify(vault.settings, null, 2) });
-  files.push({ path: '.nekko/trackers.json', content: JSON.stringify(vault.trackers, null, 2) });
+  files.push({ path: '.getsu/settings.json', content: JSON.stringify(vault.settings, null, 2) });
+  files.push({ path: '.getsu/trackers.json', content: JSON.stringify(vault.trackers, null, 2) });
 
   for (const year of Object.values(vault.years)) {
     files.push({ path: `years/${year.year}.json`, content: JSON.stringify(year, null, 2) });
@@ -58,10 +58,10 @@ export function parseVaultFromFiles(files: VaultFile[]): Vault {
   const vault = createEmptyVault();
   const byPath = new Map(files.map((f) => [normalize(f.path), f.content]));
 
-  const settings = readJson<Settings>(byPath.get('.nekko/settings.json'));
+  const settings = readJson<Settings>(byPath.get('.getsu/settings.json'));
   if (settings && typeof settings === 'object') vault.settings = { ...settings, theme: settings.theme ?? 'light' };
 
-  const trackers = readJson<Tracker[]>(byPath.get('.nekko/trackers.json'));
+  const trackers = readJson<Tracker[]>(byPath.get('.getsu/trackers.json'));
   if (Array.isArray(trackers)) vault.trackers = trackers;
 
   const marker = readJson<{ version?: number }>(byPath.get(VAULT_MARKER));

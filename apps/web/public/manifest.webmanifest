@@ -1,6 +1,6 @@
 {
-  "name": "Nekko Journal",
-  "short_name": "Nekko",
+  "name": "Getsu",
+  "short_name": "Getsu",
   "description": "A calm, anti-streak monthly journal. Set yearly goals, break them into months, and look back at your life a month at a time.",
   "start_url": "./",
   "scope": "./",
@@ -10,6 +10,7 @@
   "theme_color": "#3e8fa0",
   "categories": ["lifestyle", "productivity"],
   "icons": [
-    { "src": "icon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any maskable" }
+    { "src": "logo.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "icon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "maskable" }
   ]
 }

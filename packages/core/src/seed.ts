@@ -1,4 +1,4 @@
-import { type Vault } from '@nekko/journal-shared';
+import { type Vault } from '@getsu/shared';
 import {
   createEmptyVault,
   ensureYear,

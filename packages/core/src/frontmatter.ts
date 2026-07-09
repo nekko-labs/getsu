@@ -1,4 +1,4 @@
-import { type Month, type MonthKey, parseMonthKey } from '@nekko/journal-shared';
+import { type Month, type MonthKey, parseMonthKey } from '@getsu/shared';
 
 // A month file is Markdown: a frontmatter block of structured fields (serialized as JSON
 // for a lossless round-trip) followed by the free-form reflection as the body. This is

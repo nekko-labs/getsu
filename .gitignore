@@ -14,3 +14,4 @@ coverage/
 .claude/settings.local.json
 .github/skills/impeccable/
 .impeccable/
+_site/

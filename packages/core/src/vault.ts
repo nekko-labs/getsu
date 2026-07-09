@@ -9,7 +9,7 @@ import {
   type PhotoRef,
   type MonthKey,
   parseMonthKey,
-} from '@nekko/journal-shared';
+} from '@getsu/shared';
 
 export const VAULT_VERSION = 1;
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Text, ScrollView, Pressable, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { MONTH_NAMES, goalColor, addGoal, setYearTheme } from '@nekko/journal-core';
+import { MONTH_NAMES, goalColor, addGoal, setYearTheme } from '@getsu/core';
 import { useVault } from '../store';
 import { serif } from '../theme';
 import type { RootStackParams } from '../../App';

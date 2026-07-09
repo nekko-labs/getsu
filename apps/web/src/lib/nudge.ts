@@ -1,11 +1,11 @@
-import { type Vault, monthKey, isMonthFilled } from '@nekko/journal-core';
+import { type Vault, monthKey, isMonthFilled } from '@getsu/core';
 
 // The one gentle monthly nudge. No daily nags, no streaks: at most one reminder
 // per calendar month, and only if the current month hasn't been journaled yet.
 // Web can't schedule true background notifications without push infrastructure,
 // so we surface the reminder when the app next opens in a new month.
 
-const LAST_NUDGE_KEY = 'nekko-last-nudge';
+const LAST_NUDGE_KEY = 'getsu-last-nudge';
 const ICON = 'icon.svg';
 
 export function notifySupported(): boolean {
@@ -51,11 +51,11 @@ export function runMonthlyNudge(vault: Vault): void {
   if (isMonthFilled(vault.months[key])) { writeLast(key); return; }
 
   try {
-    const n = new Notification('Nekko Journal', {
+    const n = new Notification('Getsu', {
       body: 'A new month. Take a few quiet minutes to look back and write it down.',
       icon: ICON,
       badge: ICON,
-      tag: 'nekko-monthly',
+      tag: 'getsu-monthly',
     });
     n.onclick = () => { try { window.focus(); window.location.hash = `#/month/${key}`; n.close(); } catch { /* ignore */ } };
     writeLast(key);

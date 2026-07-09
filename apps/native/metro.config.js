@@ -1,5 +1,5 @@
 // Metro config so the native app can resolve the shared monorepo packages
-// (@nekko/journal-core, @nekko/journal-shared) from ../../packages while it
+// (@getsu/core, @getsu/shared) from ../../packages while it
 // lives outside the web npm workspace.
 const { getDefaultConfig } = require('expo/metro-config');
 const path = require('path');

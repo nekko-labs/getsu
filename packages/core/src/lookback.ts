@@ -6,7 +6,7 @@ import {
   yearMonthKeys,
   monthKeyLastYear,
   monthKey,
-} from '@nekko/journal-shared';
+} from '@getsu/shared';
 
 /** The filled months of a year, in calendar order. */
 export function filledMonths(vault: Vault, year: number): Month[] {

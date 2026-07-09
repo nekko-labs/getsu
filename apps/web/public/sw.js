@@ -1,9 +1,9 @@
-// Minimal offline service worker for Nekko Journal. Vite fingerprints asset
+// Minimal offline service worker for Getsu. Vite fingerprints asset
 // filenames, so instead of a fixed precache list we cache GET responses at
 // runtime (stale-while-revalidate) and fall back to the cached app shell for
 // navigations. Keeps the app usable offline without knowing hashed names.
 
-const CACHE = 'nekko-journal-v1';
+const CACHE = 'getsu-v1';
 
 self.addEventListener('install', () => {
   self.skipWaiting();

@@ -6,7 +6,7 @@ product
 
 ## Users
 
-People who have tried daily journaling and habit-streak apps (Day One, Stoic, Habitica, Streaks) and dropped off because the daily cadence became a chore. They still want to reflect, track goals, and keep a record — but on a rhythm they can actually sustain. They sit down with Nekko Journal roughly **once a month**, often in a calm moment (evening, weekend), to look back on the month, capture highlights and the occasional struggle, add a few photos, nudge their yearly goals, and skim how the year is trending. The job to be done: *remember and shape my life at a month scale, without the guilt machinery of daily apps.*
+People who have tried daily journaling and habit-streak apps (Day One, Stoic, Habitica, Streaks) and dropped off because the daily cadence became a chore. They still want to reflect, track goals, and keep a record — but on a rhythm they can actually sustain. They sit down with Getsu roughly **once a month**, often in a calm moment (evening, weekend), to look back on the month, capture highlights and the occasional struggle, add a few photos, nudge their yearly goals, and skim how the year is trending. The job to be done: *remember and shape my life at a month scale, without the guilt machinery of daily apps.*
 
 ## Product Purpose
 

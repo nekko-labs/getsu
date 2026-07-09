@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { type Session } from '@supabase/supabase-js';
-import { reconcileVaults } from '@nekko/journal-core';
+import { reconcileVaults } from '@getsu/core';
 import {
   isCloudConfigured,
   getSession,

@@ -1,4 +1,4 @@
-# Nekko Journal — Native (iOS / Android)
+# Getsu — Native (iOS / Android)
 
 A real Expo + React Native app that shares the same engine as the web app
 (`packages/core` + `packages/shared`) and the same warm-paper / calm-ocean
@@ -31,7 +31,7 @@ web app and persists to `AsyncStorage`. No account, no network required.
   (Premium; "Sync now" + status), and a **Siri & Shortcuts** cheat-sheet.
 
 Shared logic (vault model, goal placement, photo limits, seed, lookback, **sync
-reconciliation**, **agent/Siri intents**) is imported from `@nekko/journal-core`,
+reconciliation**, **agent/Siri intents**) is imported from `@getsu/core`,
 so behavior stays in lock-step with web and is unit-tested there.
 
 ## Sync (Premium) — `src/sync.ts`
@@ -54,7 +54,7 @@ table is the MVP; promote to the authenticated, RLS-guarded table (see repo
 The command vocabulary and all logic live in **core** (`applyIntent`,
 `parseIntent`, `resolveGoalByTitle`, `intentCatalog` — unit-tested). Native
 `runPhrase` / `runIntent` run an intent against the live store and persist;
-`handleDeepLink` handles `nekkojournal://intent?phrase=...` (wired in `App.tsx`),
+`handleDeepLink` handles `getsu://intent?phrase=...` (wired in `App.tsx`),
 which is how a **Shortcut** or an **agent** invokes it today. Native **App
 Intents** (a Swift `AppIntent` per action + Shortcuts donation) are added via an
 Expo config plugin in a dev build that forwards to `runPhrase` — handoff.

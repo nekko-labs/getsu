@@ -1,32 +1,32 @@
 {
   "expo": {
-    "name": "Nekko Journal",
-    "slug": "nekko-journal",
+    "name": "Getsu",
+    "slug": "getsu",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "scheme": "nekkojournal",
+    "scheme": "getsu",
     "newArchEnabled": true,
     "splash": {
       "backgroundColor": "#fbf7f1",
       "resizeMode": "contain"
     },
     "ios": {
-      "bundleIdentifier": "com.nekkolabs.journal",
+      "bundleIdentifier": "com.nekkolabs.getsu",
       "supportsTablet": true,
       "usesIcloudStorage": true,
       "infoPlist": {
         "NSUbiquitousContainers": {
-          "iCloud.com.nekkolabs.journal": {
+          "iCloud.com.nekkolabs.getsu": {
             "NSUbiquitousContainerIsDocumentScopePublic": false,
-            "NSUbiquitousContainerName": "Nekko Journal",
+            "NSUbiquitousContainerName": "Getsu",
             "NSUbiquitousContainerSupportedFolderLevels": "One"
           }
         }
       }
     },
     "android": {
-      "package": "com.nekkolabs.journal",
+      "package": "com.nekkolabs.getsu",
       "adaptiveIcon": {
         "backgroundColor": "#fbf7f1"
       }

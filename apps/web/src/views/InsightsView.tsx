@@ -6,7 +6,7 @@ import {
   activeTrackers,
   trackerSeries,
   goalProgress,
-} from '@nekko/journal-core';
+} from '@getsu/core';
 import { useVault } from '../state/store';
 import { MonthBars } from '../components/charts';
 

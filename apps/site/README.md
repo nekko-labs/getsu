@@ -1,18 +1,19 @@
 # Marketing site
 
-A single, self-contained static landing page for Nekko Journal (`index.html`, no build step, inline CSS/JS, ocean design language matching the app). It links to the live demo (the app itself) and the GitHub repo.
+A single, self-contained static landing page for Getsu (`index.html`, no build step, inline CSS/JS, moon + warm-paper design language matching the app). Heavy whitespace, the crescent-moon-and-cat mark with an opening animation, and one calm CTA into the app.
 
-## Deploy (handoff to Philip)
+## How it ships
 
-Static hosting on Vercel (Nekko Labs team). Two options:
+The whole repo deploys as **one Vercel project** (`getsu.app`) via the combined build in [`scripts/build-site.mjs`](../../scripts/build-site.mjs):
 
-- **Separate project** pointed at `apps/site/` with no build command and output dir `.` (serves `index.html`). Suggested domain: `journal.nekkolabs.com` (or a `.vercel.app` default).
-- Or fold into the app's Vercel project as the root and host the PWA under a path.
+- `/` → this landing page (`apps/site/*`)
+- `/app/` → the local-first app (`apps/web/dist`; Vite `base: './'` so it runs under a subpath)
 
-The live-demo CTA currently points at `https://nekko-journal.vercel.app/` — update it to the real demo URL once the app is deployed (see repo `DEPLOY.md`). The GitHub links are live.
+See the repo [`DEPLOY.md`](../../DEPLOY.md) for the full deploy + domain setup.
 
 ## Local preview
 
 ```
-npx serve apps/site      # or: python -m http.server -d apps/site 4180
+npm run build:site        # assembles _site/ (landing at /, app at /app/)
+npx serve _site           # or: python -m http.server -d _site 4181
 ```

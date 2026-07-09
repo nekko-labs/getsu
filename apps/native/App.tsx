@@ -51,7 +51,7 @@ export default function App() {
 
   useEffect(() => { void load(); }, [load]);
 
-  // Siri / Shortcuts / agent entry: nekkojournal://intent?phrase=...
+  // Siri / Shortcuts / agent entry: getsu://intent?phrase=...
   useEffect(() => {
     const onUrl = ({ url }: { url: string }) => { handleDeepLink(url); };
     const sub = Linking.addEventListener('url', onUrl);

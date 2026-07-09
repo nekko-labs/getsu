@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Text, ScrollView, Pressable, TextInput } from 'react-native';
 import type { RouteProp } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
-import { MONTH_NAMES, monthKey, photoLimit, updateMonth, updateGoal, countMonthPhotos } from '@nekko/journal-core';
+import { MONTH_NAMES, monthKey, photoLimit, updateMonth, updateGoal, countMonthPhotos } from '@getsu/core';
 import { useVault } from '../store';
 import { serif } from '../theme';
 import { Markdown } from '../markdown';

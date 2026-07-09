@@ -13,7 +13,7 @@ import {
   setMonthlyTarget,
   suggestGoalBreakdown,
   mockProvider,
-} from '@nekko/journal-core';
+} from '@getsu/core';
 import { useVault } from '../state/store';
 import { getAIProvider } from '../lib/ai';
 
