@@ -9,8 +9,9 @@
     "apps/web"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace apps/web",
-    "build": "npm run build --workspace packages/shared && npm run build --workspace packages/core && npm run build --workspace apps/web",
+    "dev": "npm run tokens && npm run dev --workspace apps/web",
+    "tokens": "node scripts/gen-tokens.mjs",
+    "build": "npm run tokens && npm run build --workspace packages/shared && npm run build --workspace packages/core && npm run build --workspace apps/web",
     "build:site": "node scripts/build-site.mjs",
     "test": "npm run test --workspace packages/core",
     "e2e": "npm run e2e --workspace apps/web",

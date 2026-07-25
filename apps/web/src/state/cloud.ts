@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { type Session } from '@supabase/supabase-js';
-import { reconcileVaults } from '@getsu/core';
+import { reconcileVaults, toast } from '@getsu/core';
 import {
   isCloudConfigured,
   getSession,
@@ -76,7 +76,9 @@ export const useCloud = create<CloudState>((set, get) => ({
       }
       set({ status: 'synced', lastSyncedAt: Date.now() });
     } catch (e) {
-      set({ status: 'error', error: e instanceof Error ? e.message : 'Sync failed' });
+      const message = e instanceof Error ? e.message : 'Sync failed';
+      set({ status: 'error', error: message });
+      toast.error("Couldn't sync your journal", `${message} — your writing is still saved on this device.`);
     }
   },
 

@@ -6,6 +6,7 @@ import { useCloud } from '../state/cloud';
 import { enableMonthlyNudge, notifyPermission } from '../lib/nudge';
 import { aiConfigured } from '../lib/ai';
 import BrandMark from '../components/BrandMark';
+import { InsightsPanel } from './InsightsView';
 
 export default function YouView() {
   const navigate = useNavigate();
@@ -105,7 +106,8 @@ export default function YouView() {
   ];
 
   return (
-    <div className="animate-rise">
+    // Page entrance comes from the route transition in App.tsx.
+    <div>
       {/* profile */}
       <div className="flex items-center gap-4 pt-2">
         <BrandMark size={56} className="shrink-0" />
@@ -113,6 +115,12 @@ export default function YouView() {
           <div className="serif text-2xl font-semibold leading-tight">Your journal</div>
           <div className="text-[13px]" style={{ color: 'var(--text-soft)' }}>{filledMonths} months · since {sinceYear}</div>
         </div>
+      </div>
+
+      {/* insights — folded into You (its own tab is now Reflect) */}
+      <div className="mt-7 border-t pt-6" style={{ borderColor: 'var(--border)' }}>
+        <div className="mb-4 text-[10.5px] font-semibold uppercase tracking-[1.6px]" style={{ color: 'var(--text-faint)' }}>Insights</div>
+        <InsightsPanel />
       </div>
 
       {/* theme */}

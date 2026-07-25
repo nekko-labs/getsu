@@ -1,6 +1,6 @@
 ---
 status: active
-last-updated: 2026-07-09
+last-updated: 2026-07-10
 owner: Philip
 ---
 
@@ -41,15 +41,15 @@ People who tried daily journaling/habit apps (Day One, Stoic, Habitica, streak t
 
 ## User Journeys & Experiences
 
-The atomic unit is the **Month**. Everything orbits it. A month is created lazily (it doesn't exist until the user opens or edits it). The **consolidated design (v7)** centers on the two things that matter: a **markdown journal per month**, and **goals broken down across the year and placed into the months where they'll happen**. The app shell is phone-first: a bottom tab bar (Year / Goals / Insights / You) on mobile, a top nav on desktop, warm-paper calm-ocean palette, light & dark.
+The atomic unit is the **Month**. Everything orbits it. A month is created lazily (it doesn't exist until the user opens or edits it). The **consolidated design (v7)** centers on the two things that matter: a **markdown journal per month**, and **goals broken down across the year and placed into the months where they'll happen**. The app shell is phone-first: a bottom tab bar (Year / Goals / Reflect / You) on mobile, a top nav on desktop, warm-paper calm-ocean palette, light & dark. The mobile tab bar has **no divider line** and shows **icons only** — the icon lifts on hover and pops when its tab becomes active, and the page name flashes in-then-out for a beat on hover or when you switch. (Insights is no longer its own tab: it lives inside **You**, and its old slot is now the **Reflect** surface.)
 
 ### 1. Year (home) — the semantic-zoom surface
 
-A user lands on the current year and can **zoom** between three levels with a segmented control (Years / Year / Timeline) or ctrl + scroll:
+A user lands on the current year, **defaulting to the Timeline**, and can **zoom** between three levels with a segmented control (Years / Year / Timeline) or ctrl + scroll:
 
+- **Timeline (default)**: a clean, journaling-first scroll of the year, inspired by minimal calendar apps. Each month leads with the **lead of its journal entry**; goals and photos are demoted to a quiet meta line (count of goals, photo count); **future and un-written months read faint** ("yet to come" / "nothing written yet") so the written months carry the eye. A **"this month"** marker sits on the current month; the editable **theme/word of the year** sits above the list. The **month nearest the viewport center** wears the pearlescent sheen (a moving spotlight as you scroll) while the others stay quiet; scrolling **gently snaps** each month to the middle, and a quiet **right-edge scrubber** (12 dots, the centered one glowing pearl) mirrors your position and lets you jump to any month. Hovering a month is quiet: no fill appears behind it, its journal lead simply **darkens** and the month number grows **richer** (the pearl month deepens its sheen; a faint month lifts toward legible).
 - **Years**: an overview of every year, each a 12-cell strip showing which months hold placed goals, with the year's theme word. Tap a year to zoom into it.
 - **Year (grid)**: a two-column month grid. Each month cell shows the goal chips planned into it; a **"this month"** badge marks the current month; empty months read "＋ drop a goal". Below the grid, the **yearly goals list** supports **inline add** and **drag**: drag a goal onto a month to plan it, or back onto the list to unplan it. An editable **theme/word of the year** sits at the top.
-- **Timeline**: the months as a scrolling list, each with its planned goal chips.
 
 ### 2. Month — the journaling ritual surface
 
@@ -62,13 +62,16 @@ The user opens a month (back to the year, prev/next month) and sees the big seri
 
 Every goal for the year in two groups: **In the calendar** (planned into a month, shown with a month tag and a done toggle) and **Unplanned** (waiting on the board). Goals are added on the Year board; here the user reviews, toggles done, deletes, and jumps to a goal's month.
 
-### 4. Insights — the reflection & delight surface
+### 4. Reflect: the memories & AI-reflection surface
 
-All-time **stat tiles** (months journaled, goals achieved, years tracked, goals set, photos kept, words written), a **goals-across-the-year** bar chart, and a **progress** bar + goal list. It links out to the **Look back** timeline (this-month-last-year, year-in-review), keeping the delight surface one tap away without cluttering the primary tabs.
+The reflective home, one tap from anywhere. Two parts:
 
-### 5. You — profile & settings
+- **Memories**: a horizontal rail of **photo memories** pulled from across every month and goal (newest first, tap to open that month). When there are no photos yet, the rail gracefully falls back to **remembered moments** (the lead lines of recent journal entries) so the surface is alive from day one.
+- **Reflection**: a calm, AI-written read of **all past data**, grouped into three short lists: **Highlights** (follow-through and brightest moments), **Areas of growth** (the habit itself, trackers trending up, a life you can see), and **To work on** (unplaced goals, one in motion, a quiet month, gently). It runs **offline by default** (a deterministic heuristic over the whole vault) and **deepens with a Claude key** on demand. Never nags, never invents facts. Links out to the deeper **Look back** (year-in-review, this-month-last-year).
 
-Avatar + "your journal" summary, a **Light / Dark** theme control, and settings rows: **Plan** (Free / Premium → pricing), **Sync & account**, **Monthly nudge**, **Export vault**, **Import data**, **Reset to demo**.
+### 5. You: profile, insights & settings
+
+Avatar + "your journal" summary; the full **Insights** panel folded in (all-time **stat tiles**: months journaled, goals achieved, years tracked, goals set, photos kept, words written; a **goals-across-the-year** bar chart; a **progress** bar + goal list; **trackers** across the year; and the **Look back** link); a **Light / Dark** theme control; and settings rows: **Plan** (Free / Premium → pricing), **Sync & account**, **Local folder**, **Trackers**, **Journaling assist**, **Monthly nudge**, **Export vault**, **Import data**, **Reset to demo**.
 
 ## What Success Looks Like
 
@@ -82,14 +85,17 @@ Avatar + "your journal" summary, a **Light / Dark** theme control, and settings 
 Living catalog of capabilities, grouped by area. Marked `[shipped]` / `[in progress]` / `[planned]`. Capability-level descriptions — task-level breakdown lives in [TASKS.md](TASKS.md).
 
 ### Foundation & shell
-- **Phone-first tabbed shell** `[shipped]` — Year / Goals / Insights / You via a bottom tab bar on mobile and a top nav on desktop; chrome hidden on the welcome + month surfaces. React Router (HashRouter).
+- **Phone-first tabbed shell** `[shipped]`: Year / Goals / Reflect / You via a bottom tab bar on mobile and a top nav on desktop; chrome hidden on the welcome + month surfaces. React Router (HashRouter). (Insights folded into You; Reflect took its tab slot.)
 - **Simplified welcome** `[shipped]` — the first screen is just the title, "one month at a time", and one animated inspirational CTA (a teal underline that flows into an arrow). Shown once per device.
 - **Calm dark/light theming** `[shipped]` — CSS-variable theme with `data-theme`, warm-paper **calm-ocean** palette (teal accent `#3e8fa0` / `#6fb3c2` dark), generous whitespace.
+- **Calm motion language** `[shipped]`: gentle enter-only route transitions (fade + small rise) and staggered list/grid entrances in the app (via the `motion` library, ease-out only, never bounce); scroll-triggered reveals, the phone-demo fade-in and scroll parallax, and a slow breathing moon glow on the landing page. Everything respects `prefers-reduced-motion` and never delays interactivity.
 - **Local-first vault (zero-config)** `[shipped]` — IndexedDB persistence + seeded demo data so the app is alive on first run with no setup.
 - **Open a real local folder** `[shipped]` — on Chromium (File System Access API), open a folder on disk as your vault. It's written as a human-browsable folder of files (`years/YYYY.json`, `months/YYYY-MM.md` with frontmatter, `.getsu/*.json`) and mirrored on every edit; reconnects after a reload. Truly own-your-data: the journal is plain files you can read, back up, or sync yourself.
 
 ### Year surface
-- **Semantic zoom (Years / Year / Timeline)** `[shipped]` — segmented control + ctrl+scroll to move between a multi-year overview, the month grid, and a scrolling timeline.
+- **Semantic zoom (Years / Year / Timeline)** `[shipped]`: segmented control + ctrl+scroll to move between a multi-year overview, the month grid, and a scrolling timeline. **Timeline is the default** zoom.
+- **Journaling-first timeline** `[shipped]`: the timeline leads each month with the lead of its journal entry; goals/photos are a quiet meta line; future and un-written months read faint. A clean, minimal, journaling-focused scroll (inspired by minimal calendar apps).
+- **Centered-month spotlight + scrubber** `[shipped]`: the month number nearest the viewport center wears the pearlescent sheen (a spotlight that moves as you scroll), scrolling gently snaps months to the middle (CSS `scroll-snap`), and a quiet right-edge scrubber of 12 dots mirrors your position (centered dot glows pearl) and jumps to any month on tap.
 - **Two-column month grid** `[shipped]` — goal chips per month, "this month" badge, "＋ drop a goal" empty state.
 - **Drag goals onto months** `[shipped]` — drag a yearly goal onto the month where it'll happen (`goal.plannedMonth`); drag back to the list to unplan.
 - **Yearly goals list + inline add** `[shipped]` — add a goal for the year inline; each row is draggable.
@@ -110,11 +116,15 @@ Living catalog of capabilities, grouped by area. Marked `[shipped]` / `[in progr
 - **Computed progress across the year** `[shipped]` — number goals accumulate their monthly check-in values toward a target (partial credit); milestone goals are done-or-not. Insights shows an averaged progress bar plus per-goal value/target bars.
 - **Tracker management** `[shipped]` — define / edit / archive / delete trackers (name, kind, unit, target, color) from the You surface; each charts across the year in Insights.
 
-### Insights & look back
-- **All-time stat tiles** `[shipped]` — months journaled, goals achieved, years tracked, goals set, photos kept, words written.
-- **Goals-across-the-year bar chart** `[shipped]` — goals placed per month.
-- **Progress** `[shipped]` — done/planned bar + goal list.
-- **Look back (timeline, this-month-last-year, year-in-review)** `[shipped]` — reachable from Insights. (Not gated; ships free.)
+### Reflect surface
+- **Photo memories rail** `[shipped]`: a horizontal rail of every photo kept across all months and goals (newest first; tap to open the month). Falls back to remembered journal moments when no photos exist yet.
+- **Whole-journey AI reflection** `[shipped]`: a calm three-part read of all past data (Highlights / Areas of growth / To work on), offline by default via a deterministic heuristic over the whole vault, deepening with a Claude key on demand. Provider-agnostic core op (`reflectOnJourney` + `buildReflectionMaterial`), DOM-free and testable.
+
+### Insights & look back (now inside You)
+- **All-time stat tiles** `[shipped]`: months journaled, goals achieved, years tracked, goals set, photos kept, words written. Folded into the **You** surface (no longer its own tab).
+- **Goals-across-the-year bar chart** `[shipped]`: goals placed per month.
+- **Progress** `[shipped]`: done/planned bar + goal list.
+- **Look back (timeline, this-month-last-year, year-in-review)** `[shipped]`: reachable from You and from Reflect. (Not gated; ships free.)
 
 ### Plans & billing
 - **Free / Premium split** `[shipped]` — Free is the complete local app (all surfaces, unlimited goals/entries, 3 photos/month). Premium adds sync, Siri/agent, 25 photos/month, cloud backup + web access.
@@ -131,8 +141,10 @@ Living catalog of capabilities, grouped by area. Marked `[shipped]` / `[in progr
 
 ### Platform & growth
 - **Responsive desktop + mobile web** `[shipped]` — one web app: bottom tabs + full-bleed on mobile, top nav + centered column on desktop.
-- **Marketing site** `[shipped]` — a self-contained static landing page (`apps/site/`) in the app's ocean design: mood-grid hero, feature grid, the free/premium split, and a live-demo CTA. Deploy to Vercel + the real demo URL is a handoff to Philip.
+- **Marketing site** `[shipped]`: a four-page static site (`apps/site/`) in the app's warm-paper ocean design, minimal and whitespace-heavy with subtle enter-only motion (shared `site.css`). The landing page has a nav, the animated mark hero, a **phone demo** (an iPhone mockup that loops a walk-through of the Timeline, a month's journal, and Goals, recreated from the app's own content and tokens; it fades in and rises on load with a gentle scroll parallax), "the monthly ritual" in three steps, the three calm truths, and a pricing whisper. A dedicated `/pricing` page (Vercel `cleanUrls`) has Free vs Premium cards with the $3 intro, the "never a paywall on writing" promise, and a quiet FAQ. `/privacy` and `/terms` pages (linked in every footer) carry the legal surface.
+- **Privacy, terms, and legal accuracy** `[shipped]`: a `/privacy` policy written to match what the code actually does (local-first, no analytics, no cookies; optional AI uses the user's own key and sends text not photos to Anthropic; optional Supabase sync stores the vault per-user) and a `/terms` page (your content is yours, MIT-licensed app, as-is, optional paid Premium). The earlier "**Encrypted** cloud backup" claim was corrected to "Secure cloud backup" across the site and app copy, because sync has **no client-side encryption** today (the vault is stored as plaintext JSONB, protected only by TLS in transit and at-rest disk encryption); the privacy policy discloses plainly that sync is **not end-to-end encrypted**.
 - **Native iOS/Android (Expo)** `[shipped]` — a real Expo React Native app (`apps/native`) sharing `packages/core` + `packages/shared`: Year / Goals / Insights / You + Month, markdown journal, goal placement, sync + Siri/Shortcuts wiring, same ocean design. Runs local-first today; store publishing is part of the billing/deploy handoff.
+- **Brand mark** `[shipped]` — the Getsu icon is a black cat curled asleep on a gold crescent moon, on a transparent ground (`apps/web/public/logo.png`, background removed from the source art). It drives the favicon, the PWA / apple-touch / maskable icons, the in-app `BrandMark`, and the marketing-site nav + footer. Maskable and apple-touch variants sit on the warm-cream paper tile so the dark cat stays legible.
 - **Installable PWA** `[shipped]` — web app manifest + maskable icon + offline service worker (runtime cache, shell fallback), so Getsu installs to the home screen and works offline.
 - **Gentle monthly nudge** `[shipped]` — at most one calendar-month reminder (Web Notification), and only if the current month isn't journaled yet; tapping it opens that month. Opt-in from You; no daily nags, no streaks.
 - **Marketing site + live demo** `[planned]` — Vercel config + DEPLOY.md done; actual deploy is Philip's.
@@ -141,6 +153,7 @@ Living catalog of capabilities, grouped by area. Marked `[shipped]` / `[in progr
 ### AI (journaling assist)
 - **Reflection prompts / journaling assistant** `[shipped]` — the Month surface suggests reflection prompts you can tap to drop into your entry.
 - **Auto-summarize a month; draft year-in-review** `[shipped]` — summarize the current month from its notes (Month), and draft a warm year-in-review from the year's data (Look back).
+- **Whole-journey reflection** `[shipped]`: reads all past data into three calm lists (highlights, areas of growth, things to work on) on the Reflect surface; offline heuristic by default, Claude on demand.
 - **Suggest goal → monthly breakdowns** `[shipped]` — turn a goal into a few monthly steps (Goals), placeable into the calendar with one tap.
 - **Provider-agnostic, default Claude, offline-first** `[shipped]` — all of the above run offline with built-in heuristics (no key, no network); adding a bring-your-own Claude API key (stored only on-device, never synced/exported) upgrades them to the model. Core `ai.ts` is DOM-free and provider-agnostic; the web layer supplies the Claude provider via the official SDK.
 

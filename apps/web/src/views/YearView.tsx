@@ -1,17 +1,22 @@
-import { useState, type CSSProperties, type DragEvent } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type DragEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ChevronRight, Plus } from 'lucide-react';
+import { motion } from 'motion/react';
+import { ChevronRight, Plus, Camera } from 'lucide-react';
 import {
   type Goal,
+  type Month,
   MONTH_NAMES,
   monthKey,
   goalColor,
+  countMonthPhotos,
+  isMonthFilled,
   addGoal as addGoalCore,
   updateGoal,
   setGoalPlannedMonth,
   setYearTheme,
 } from '@getsu/core';
 import { useVault } from '../state/store';
+import { riseItem } from '../lib/motion';
 
 const EMPTY_GOALS: Goal[] = [];
 type Zoom = 'years' | 'grid' | 'list';
@@ -30,15 +35,22 @@ export default function YearView() {
   const goals = yearObj?.goals ?? EMPTY_GOALS;
   const themeWord = yearObj?.theme ?? '';
 
-  const [zoom, setZoom] = useState<Zoom>('grid');
+  // Timeline is the calm default: a clean, journaling-first scroll of the year.
+  const [zoom, setZoom] = useState<Zoom>('list');
   const [zoomDir, setZoomDir] = useState<'in' | 'out'>('in');
+  // 0 until the user first changes zoom level; the initial mount plays the
+  // month-cell cascade instead of the semantic-zoom animation, which only
+  // makes sense once an actual zoom has happened.
+  const [zoomCount, setZoomCount] = useState(0);
   const [draft, setDraft] = useState('');
   const [dragId, setDragId] = useState<string | null>(null);
   const [overMonth, setOverMonth] = useState<number | null>(null);
   const dragActive = dragId != null;
 
   const changeZoom = (z: Zoom) => {
+    if (z === zoom) return;
     setZoomDir(ZOOM_ORDER.indexOf(z) > ZOOM_ORDER.indexOf(zoom) ? 'in' : 'out');
+    setZoomCount((n) => n + 1);
     setZoom(z);
   };
   const onWheel = (e: React.WheelEvent) => {
@@ -74,6 +86,54 @@ export default function YearView() {
 
   const zoomClass = zoomDir === 'out' ? 'animate-zoom-out' : 'animate-zoom-in';
 
+  // ── Timeline: track which month sits nearest the viewport center ──
+  // The centered month wears the pearlescent sheen; a right-edge scrubber
+  // mirrors it. Scroll-snap gently settles each month to the middle.
+  const listRef = useRef<HTMLDivElement>(null);
+  const rowRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const [activeMonth, setActiveMonth] = useState(() => (year === currentYear ? currentMonth : 1));
+
+  useEffect(() => {
+    if (zoom !== 'list') return;
+    const listEl = listRef.current;
+    if (!listEl) return;
+    const scroller = (listEl.closest('main') as HTMLElement | null) ?? document.scrollingElement as HTMLElement;
+    if (!scroller) return;
+
+    const prevSnap = scroller.style.scrollSnapType;
+    scroller.style.scrollSnapType = 'y proximity';
+
+    let raf = 0;
+    const measure = () => {
+      raf = 0;
+      const sr = scroller.getBoundingClientRect();
+      const mid = sr.top + sr.height / 2;
+      let best = 1;
+      let bestDist = Infinity;
+      rowRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        const dist = Math.abs(r.top + r.height / 2 - mid);
+        if (dist < bestDist) { bestDist = dist; best = i + 1; }
+      });
+      setActiveMonth((prev) => (prev === best ? prev : best));
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(measure); };
+
+    scroller.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    measure();
+    return () => {
+      scroller.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+      scroller.style.scrollSnapType = prevSnap;
+    };
+  }, [zoom, year]);
+
+  const scrollToMonth = (m: number) =>
+    rowRefs.current[m - 1]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
   return (
     <div onWheel={onWheel}>
       {/* zoom control */}
@@ -99,7 +159,7 @@ export default function YearView() {
       {zoom === 'years' && <YearsOverview key={`years-${year}`} className={zoomClass} />}
 
       {zoom === 'grid' && (
-        <div key={`grid-${year}`} className={zoomClass}>
+        <div key={`grid-${year}`} className={zoomCount > 0 ? zoomClass : undefined}>
           {/* year header + editable theme word */}
           <div className="pb-6 text-center">
             <div className="serif text-3xl font-semibold tracking-tight">{year}</div>
@@ -131,8 +191,12 @@ export default function YearView() {
                 transition: 'background .18s, border-color .18s',
               };
               return (
-                <div
+                <motion.div
                   key={month}
+                  variants={riseItem}
+                  initial={zoomCount === 0 ? 'hidden' : false}
+                  animate="show"
+                  custom={i}
                   style={cellStyle}
                   onDragOver={allowDrop}
                   onDrop={dropOnMonth(month)}
@@ -156,7 +220,7 @@ export default function YearView() {
                       <span className="py-0.5 text-[11.5px] italic" style={{ color: 'var(--text-faint)' }}>＋ drop a goal</span>
                     )}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -218,44 +282,197 @@ export default function YearView() {
       )}
 
       {zoom === 'list' && (
-        <div key={`list-${year}`} className={zoomClass}>
-          <div className="serif mb-3 text-center text-[32px] font-semibold tracking-tight">{year}</div>
-          <div className="flex flex-col">
+        <div key={`list-${year}`} className={zoomCount > 0 ? zoomClass : undefined}>
+          {/* year header + editable theme word */}
+          <div className="pb-12 pt-2 text-center">
+            <div className="serif text-[34px] font-semibold tracking-tight">{year}</div>
+            <input
+              value={themeWord}
+              onChange={(e) => mutate((v) => setYearTheme(v, year, e.target.value))}
+              placeholder="a word for the year"
+              className="serif mt-1.5 w-full bg-transparent text-center text-[15px] italic outline-none"
+              style={{ color: 'var(--text-soft)' }}
+            />
+          </div>
+
+          <div ref={listRef} className="flex flex-col gap-[28vh]">
             {MONTH_NAMES.map((name, i) => {
               const month = i + 1;
+              const m = vault.months[monthKey(year, month)];
               const mg = goals.filter((g) => g.plannedMonth === month);
               return (
-                <button
+                <motion.div
                   key={month}
-                  onClick={() => openMonth(month)}
-                  className="-mx-2 rounded-2xl px-2 py-4 text-left transition hover:bg-[var(--surface-2)]"
+                  ref={(el) => { rowRefs.current[i] = el; }}
+                  variants={riseItem}
+                  initial={zoomCount === 0 ? 'hidden' : false}
+                  animate="show"
+                  custom={i}
+                  style={{ scrollSnapAlign: 'center' }}
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="serif text-2xl font-semibold" style={{ color: 'var(--text)' }}>{name}</span>
-                    <ChevronRight size={18} style={{ color: 'var(--text-faint)' }} />
-                  </div>
-                  {isCurrent(month) && (
-                    <span className="mt-0.5 block text-[9px] font-bold uppercase tracking-[1.2px]" style={{ color: 'var(--accent)' }}>this month</span>
-                  )}
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {mg.map((g) => (
-                      <span key={g.id} className="inline-flex items-center gap-2 rounded-full px-3 py-1.5" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
-                        <span className="h-2 w-2 rounded-full" style={{ background: g.color ?? 'var(--accent)' }} />
-                        <span className="text-[12.5px] font-medium" style={{ color: 'var(--text)', textDecoration: g.status === 'done' ? 'line-through' : 'none', opacity: g.status === 'done' ? 0.6 : 1 }}>{g.title}</span>
-                      </span>
-                    ))}
-                    {mg.length === 0 && <span className="text-[13px] italic" style={{ color: 'var(--text-faint)' }}>nothing planned</span>}
-                  </div>
-                </button>
+                  <TimelineRow
+                    name={name}
+                    monthNum={month}
+                    month={m}
+                    current={isCurrent(month)}
+                    future={isFuture(year, month, currentYear, currentMonth)}
+                    pearl={activeMonth === month}
+                    goals={mg}
+                    onOpen={() => openMonth(month)}
+                  />
+                </motion.div>
               );
             })}
           </div>
+
+          {/* Right-edge scrubber: 12 quiet dots, the centered month glowing pearl. */}
+          <TimelineScrubber active={activeMonth} onJump={scrollToMonth} />
         </div>
       )}
 
       <p className="mt-8 text-center text-[11px]" style={{ color: 'var(--text-faint)' }}>
         Tip: ctrl + scroll to zoom Years ⇄ Year ⇄ Timeline · drag a goal onto a month to plan it
       </p>
+    </div>
+  );
+}
+
+// A month sits in the future when it hasn't happened yet in the current year, or
+// belongs to any year past the current one. Future/empty months read faint.
+function isFuture(year: number, month: number, curYear: number, curMonth: number): boolean {
+  return year > curYear || (year === curYear && month > curMonth);
+}
+
+/** A plain-text lead of a month's journal for the timeline preview. */
+function snippet(md: string, n = 104): string {
+  const clean = md.replace(/[#>*`_]/g, ' ').replace(/^\s*[-*]\s*/gm, '').replace(/\s+/g, ' ').trim();
+  return clean.length > n ? `${clean.slice(0, n).trimEnd()}…` : clean;
+}
+
+// A calm, journaling-first timeline row: a large month title, then its journal
+// lead line, then the month's goals as small dot + title subtext. Generous
+// whitespace; future/empty months fade back so the written ones carry the eye.
+function TimelineRow({
+  name,
+  monthNum,
+  month,
+  current,
+  future,
+  pearl,
+  goals,
+  onOpen,
+}: {
+  name: string;
+  monthNum: number;
+  month: Month | undefined;
+  current: boolean;
+  future: boolean;
+  // True when this is the month nearest the viewport center: it wears the
+  // pearlescent sheen while the others stay quiet.
+  pearl: boolean;
+  goals: Goal[];
+  onOpen: () => void;
+}) {
+  const [revealed, setRevealed] = useState(false);
+  const filled = isMonthFilled(month);
+  const preview = month?.reflection ? snippet(month.reflection) : '';
+  const photos = countMonthPhotos(month);
+  const dim = future && !filled;
+
+  return (
+    <button
+      onClick={onOpen}
+      className="group -mx-3 block w-full rounded-3xl px-3 py-3 text-left"
+      style={{ opacity: dim ? 0.4 : 1 }}
+    >
+      <div className="flex items-baseline gap-3.5 pt-1">
+        <h3
+          onClick={(e) => { e.stopPropagation(); setRevealed((r) => !r); }}
+          className={`serif text-[56px] font-semibold leading-[1.12] tracking-tight transition-[filter,color] duration-300 ${
+            pearl
+              ? 'pearl-text group-hover:[filter:saturate(1.4)_contrast(1.06)_brightness(0.94)]'
+              : 'text-[var(--text-faint)] group-hover:text-[var(--text-soft)]'
+          }`}
+          style={{ letterSpacing: '-1px' }}
+        >
+          {monthNum}
+        </h3>
+        {/* The month name is a quiet subtext that fades in on hover (desktop) or tap (touch). */}
+        <span
+          className={`serif text-[16px] italic transition-opacity duration-300 group-hover:opacity-60 ${revealed ? 'opacity-60' : 'opacity-0'}`}
+          style={{ color: 'var(--text-soft)' }}
+        >
+          {name}
+        </span>
+        {current && <span className="text-[9.5px] font-bold uppercase tracking-[1.3px]" style={{ color: 'var(--accent)' }}>this month</span>}
+      </div>
+
+      {preview ? (
+        <p className="mt-3.5 line-clamp-2 text-[15px] leading-relaxed text-[var(--text-soft)] transition-colors duration-300 group-hover:text-[var(--text)]">{preview}</p>
+      ) : (
+        <p className="mt-3.5 text-[14px] italic text-[var(--text-faint)] transition-colors duration-300 group-hover:text-[var(--text-soft)]">{future ? 'yet to come' : 'nothing written yet'}</p>
+      )}
+
+      {goals.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+          {goals.map((g) => (
+            <span key={g.id} className="inline-flex items-center gap-2">
+              <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: g.color ?? 'var(--accent)' }} />
+              <span
+                className="text-[12.5px]"
+                style={{ color: 'var(--text-soft)', textDecoration: g.status === 'done' ? 'line-through' : 'none', opacity: g.status === 'done' ? 0.6 : 1 }}
+              >
+                {g.title}
+              </span>
+            </span>
+          ))}
+          {photos > 0 && (
+            <span className="inline-flex items-center gap-1 text-[11.5px]" style={{ color: 'var(--text-faint)' }}>
+              <Camera size={12} /> {photos}
+            </span>
+          )}
+        </div>
+      )}
+      {goals.length === 0 && photos > 0 && (
+        <div className="mt-4 inline-flex items-center gap-1 text-[11.5px]" style={{ color: 'var(--text-faint)' }}>
+          <Camera size={12} /> {photos}
+        </div>
+      )}
+    </button>
+  );
+}
+
+// A quiet vertical scrubber pinned to the right edge: one dot per month, gray
+// and faint, with the centered month glowing pearlescent. Tapping a dot glides
+// that month to the middle.
+function TimelineScrubber({ active, onJump }: { active: number; onJump: (m: number) => void }) {
+  return (
+    <div className="fixed right-1.5 top-1/2 z-20 flex -translate-y-1/2 flex-col items-center gap-2 sm:right-3">
+      {Array.from({ length: 12 }, (_, i) => {
+        const m = i + 1;
+        const on = m === active;
+        return (
+          <button
+            key={m}
+            onClick={() => onJump(m)}
+            aria-label={`Jump to ${MONTH_NAMES[i]}`}
+            aria-current={on ? 'true' : undefined}
+            className="grid place-items-center p-1"
+          >
+            <span
+              style={{
+                display: 'block',
+                borderRadius: 9999,
+                width: on ? 9 : 6,
+                height: on ? 9 : 6,
+                background: on ? 'var(--pearl)' : 'var(--text-faint)',
+                opacity: on ? 1 : 0.32,
+                transition: 'width .25s var(--ease-out-quint), height .25s var(--ease-out-quint), opacity .25s',
+              }}
+            />
+          </button>
+        );
+      })}
     </div>
   );
 }

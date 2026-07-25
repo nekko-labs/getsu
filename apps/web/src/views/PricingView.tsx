@@ -64,10 +64,11 @@ export default function PricingView() {
   const btn = 'inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition active:scale-[0.98]';
 
   return (
-    <div className="animate-rise py-2">
+    // Page entrance comes from the route transition in App.tsx.
+    <div className="py-2">
       <h1 className="serif text-3xl font-semibold tracking-tight">Plans</h1>
       <p className="mb-6 mt-1.5 text-[13.5px] leading-relaxed" style={{ color: 'var(--text-soft)' }}>
-        The whole journal is free, forever. Premium adds sync, voice, and more photos, never a paywall on writing.
+        Open source and local-first: own your data, export any time, and we never sell it. The core journal is free; Premium adds sync, voice, and more photos.
       </p>
 
       <div className="grid gap-5 md:grid-cols-2">

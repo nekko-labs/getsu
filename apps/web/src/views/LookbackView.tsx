@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
 import { Camera, Star, History, Sparkles, Loader2 } from 'lucide-react';
 import {
   monthLabel,
@@ -9,23 +10,16 @@ import {
   thisMonthLastYear,
   draftYearInReview,
   mockProvider,
+  toast,
   type Month,
 } from '@getsu/core';
 import { useVault } from '../state/store';
-import { PageHeader, Section } from '../components/ui';
+import { PageHeader, Section, Stat, Chip, SoftButton } from '../components/ui';
 import { Markdown } from '../components/markdown';
 import { getAIProvider } from '../lib/ai';
+import { riseItem } from '../lib/motion';
 
 const MOODS = ['', '😞', '😕', '😐', '🙂', '😄'];
-
-function Stat({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="rounded-xl px-3 py-2.5 text-center" style={{ background: 'var(--surface-2)' }}>
-      <div className="serif text-2xl font-semibold">{value}</div>
-      <div className="text-xs" style={{ color: 'var(--text-faint)' }}>{label}</div>
-    </div>
-  );
-}
 
 function TimelineRow({ m }: { m: Month }) {
   const navigate = useNavigate();
@@ -42,7 +36,7 @@ function TimelineRow({ m }: { m: Month }) {
         <img src={m.photos[0].src} alt="" className="h-14 w-14 shrink-0 rounded-lg object-cover" />
       )}
       <div className="min-w-0 flex-1">
-        <p className="line-clamp-2 text-sm" style={{ color: 'var(--text-soft)' }}>
+        <p className="journal line-clamp-2 text-sm" style={{ color: 'var(--text-soft)' }}>
           {m.highlights[0] ?? m.reflection.slice(0, 120) ?? '—'}
         </p>
         <div className="mt-1 flex items-center gap-3 text-xs" style={{ color: 'var(--text-faint)' }}>
@@ -68,6 +62,9 @@ export default function LookbackView() {
     try {
       setDraft(await draftYearInReview(getAIProvider(), review));
     } catch {
+      // Fall back to the offline draft, but say so — silently swapping in a
+      // different writer is exactly the kind of thing that erodes trust.
+      toast.info('Wrote this year-in-review offline', 'Claude was unreachable, so the built-in writer drafted it.');
       setDraft(await draftYearInReview(mockProvider, review));
     } finally {
       setDrafting(false);
@@ -95,9 +92,9 @@ export default function LookbackView() {
           {review.trackerTotals.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
               {review.trackerTotals.map((t) => (
-                <span key={t.trackerId} className="rounded-full px-3 py-1 text-sm" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                <Chip key={t.trackerId}>
                   {t.total} {trackerUnit(t.trackerId) || trackerName(t.trackerId).toLowerCase()}
-                </span>
+                </Chip>
               ))}
             </div>
           )}
@@ -107,16 +104,16 @@ export default function LookbackView() {
             </p>
           )}
 
-          <button
+          <SoftButton
             onClick={writeReview}
             disabled={drafting}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition active:scale-95 disabled:opacity-60"
-            style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+            className="mt-4"
+            icon={drafting ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
           >
-            {drafting ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />} Draft year-in-review
-          </button>
+            Draft year-in-review
+          </SoftButton>
           {draft && (
-            <div className="mt-4 rounded-2xl p-4" style={{ background: 'var(--surface-2)' }}>
+            <div className="journal journal-justify measure mt-4 rounded-2xl p-4 text-[15.5px] leading-[1.7]" style={{ background: 'var(--surface-2)' }} aria-live="polite">
               <Markdown source={draft} />
             </div>
           )}
@@ -125,7 +122,7 @@ export default function LookbackView() {
         {lastYear && (
           <Section title="This month, last year" hint={monthLabel(lastYear.id)}>
             <button onClick={() => navigate(`/month/${lastYear.id}`)} className="text-left">
-              <p className="text-sm" style={{ color: 'var(--text-soft)' }}>
+              <p className="journal measure text-sm" style={{ color: 'var(--text-soft)' }}>
                 {lastYear.highlights[0] ?? lastYear.reflection.slice(0, 140) ?? '—'}
               </p>
               <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
@@ -141,7 +138,11 @@ export default function LookbackView() {
             <p className="text-sm italic" style={{ color: 'var(--text-faint)' }}>Nothing yet — your months will appear here.</p>
           ) : (
             <div className="space-y-3">
-              {all.map((m) => <TimelineRow key={m.id} m={m} />)}
+              {all.map((m, i) => (
+                <motion.div key={m.id} variants={riseItem} initial="hidden" animate="show" custom={i}>
+                  <TimelineRow m={m} />
+                </motion.div>
+              ))}
             </div>
           )}
         </div>

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { type Vault, type Plan, seedDemoVault } from '@getsu/core';
+import { type Vault, type Plan, seedDemoVault, toast } from '@getsu/core';
 import { loadVault, saveVault, clearVault } from '../lib/idb';
 import {
   type FsDirHandle,
@@ -54,11 +54,26 @@ let folderTimer: ReturnType<typeof setTimeout> | null = null;
 
 function schedulePersist(vault: Vault) {
   if (saveTimer) clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => void saveVault(vault), 400);
+  // A local-first app that loses a write must say so — this is the one failure
+  // the user can act on (free some space, reconnect the folder).
+  saveTimer = setTimeout(
+    () => void saveVault(vault).catch((e: unknown) => {
+      toast.error(
+        "Couldn't save to this device",
+        e instanceof Error ? e.message : 'Your latest edits are only in memory until this succeeds.',
+      );
+    }),
+    400,
+  );
   if (folderHandle) {
     if (folderTimer) clearTimeout(folderTimer);
     const handle = folderHandle;
-    folderTimer = setTimeout(() => void writeVaultToFolder(handle, vault).catch(() => {}), 800);
+    folderTimer = setTimeout(
+      () => void writeVaultToFolder(handle, vault).catch(() => {
+        toast.error(`Couldn't write to “${handle.name}”`, 'Your journal is still saved on this device. Reconnect the folder to mirror it again.');
+      }),
+      800,
+    );
   }
 }
 
@@ -154,7 +169,11 @@ export const useVault = create<VaultState>((set, get) => ({
     } else {
       // Empty/new folder — seed it from the current vault.
       const current = get().vault;
-      if (current) await writeVaultToFolder(handle, current).catch(() => {});
+      if (current) {
+        await writeVaultToFolder(handle, current).catch(() => {
+          toast.error(`Couldn't write to “${handle.name}”`, 'The folder was connected, but the first write failed.');
+        });
+      }
     }
     set({ folderName: handle.name, folderStatus: 'connected' });
     return { ok: true, loaded: loadedFromFolder };

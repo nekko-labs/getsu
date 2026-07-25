@@ -1,17 +1,22 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Routes, Route, Navigate, NavLink, useLocation } from 'react-router-dom';
 import { Calendar, Target, BarChart3, User, Sparkles } from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
+import { MotionConfig, motion } from 'motion/react';
+import { EASE_OUT } from './lib/motion';
 import { useVault } from './state/store';
 import { useCloud } from './state/cloud';
 import { runMonthlyNudge } from './lib/nudge';
 import Splash from './components/Splash';
+import ErrorBoundary from './components/ErrorBoundary';
+import Toaster from './components/Toaster';
 import BrandMark from './components/BrandMark';
 import OnboardingView, { ONBOARD_KEY } from './views/OnboardingView';
 import YearView from './views/YearView';
 import MonthView from './views/MonthView';
 import GoalsView from './views/GoalsView';
 import InsightsView from './views/InsightsView';
+import ReflectView from './views/ReflectView';
 import YouView from './views/YouView';
 import LookbackView from './views/LookbackView';
 import YearsView from './views/YearsView';
@@ -38,7 +43,7 @@ function useTabs() {
   return [
     { to: `/year/${year}`, match: '/year', label: 'Year', icon: <Calendar size={TAB_ICON_SIZE} strokeWidth={1.7} /> },
     { to: `/goals/${year}`, match: '/goals', label: 'Goals', icon: <Target size={TAB_ICON_SIZE} strokeWidth={1.7} /> },
-    { to: '/insights', match: '/insights', label: 'Insights', icon: <BarChart3 size={TAB_ICON_SIZE} strokeWidth={1.7} /> },
+    { to: '/reflect', match: '/reflect', label: 'Reflect', icon: <Sparkles size={TAB_ICON_SIZE} strokeWidth={1.7} /> },
     { to: '/you', match: '/you', label: 'You', icon: <User size={TAB_ICON_SIZE} strokeWidth={1.7} /> },
   ];
 }
@@ -77,29 +82,68 @@ function TopNav() {
   );
 }
 
+/** True for a short beat after the active tab changes — used to flash the tab label. */
+function useActiveFlash(activeMatch: string): boolean {
+  const [flash, setFlash] = useState(false);
+  useEffect(() => {
+    setFlash(true);
+    const id = setTimeout(() => setFlash(false), 1500);
+    return () => clearTimeout(id);
+  }, [activeMatch]);
+  return flash;
+}
+
+/**
+ * A bottom-bar tab: just the icon, which lifts on hover and pops when its tab
+ * becomes active. The label (the page name) is hidden, fading in on hover and
+ * flashing in-then-out for a beat whenever you switch to this tab.
+ */
+function MobileTab({ tab, active, flash }: { tab: ReturnType<typeof useTabs>[number]; active: boolean; flash: boolean }) {
+  return (
+    <NavLink
+      to={tab.to}
+      className="group relative flex flex-1 flex-col items-center gap-1 py-1"
+      style={{ color: active ? 'var(--accent)' : 'var(--text-faint)' }}
+    >
+      <motion.span
+        aria-hidden
+        className="block"
+        whileHover={{ y: -3, scale: 1.14 }}
+        whileTap={{ scale: 0.9 }}
+        animate={active ? { scale: [1, 1.28, 1], y: [0, -3, 0] } : { scale: 1, y: 0 }}
+        transition={{ duration: 0.42, ease: EASE_OUT }}
+      >
+        {tab.icon}
+      </motion.span>
+      <span
+        data-flash={flash ? '1' : undefined}
+        className="pointer-events-none text-[10px] font-semibold leading-none opacity-0 transition-opacity duration-300 group-hover:opacity-100 data-[flash=1]:opacity-100"
+      >
+        {tab.label}
+      </span>
+    </NavLink>
+  );
+}
+
 function BottomTabs() {
   const tabs = useTabs();
   const { pathname } = useLocation();
+  const activeMatch = tabs.find((t) => pathname.startsWith(t.match))?.match ?? '';
+  const flash = useActiveFlash(activeMatch);
   return (
     <nav
-      className="shrink-0 border-t md:hidden"
-      style={{ borderColor: 'var(--border)', background: 'var(--bg)', paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="shrink-0 md:hidden"
+      style={{ background: 'var(--bg)', paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className="flex items-stretch justify-around px-2 py-1.5">
-        {tabs.map((t) => {
-          const active = pathname.startsWith(t.match);
-          return (
-            <NavLink
-              key={t.match}
-              to={t.to}
-              className="flex flex-1 flex-col items-center gap-1 py-1 transition-transform active:scale-95"
-              style={{ color: active ? 'var(--accent)' : 'var(--text-faint)' }}
-            >
-              {t.icon}
-              <span className="text-[10px] font-semibold">{t.label}</span>
-            </NavLink>
-          );
-        })}
+        {tabs.map((t) => (
+          <MobileTab
+            key={t.match}
+            tab={t}
+            active={pathname.startsWith(t.match)}
+            flash={activeMatch === t.match && flash}
+          />
+        ))}
       </div>
     </nav>
   );
@@ -114,7 +158,9 @@ export default function App() {
   const loaded = useVault((s) => s.loaded);
   const load = useVault((s) => s.load);
   const initCloud = useCloud((s) => s.init);
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const { pathname } = location;
+  const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     void load().then(() => {
@@ -123,6 +169,11 @@ export default function App() {
       if (v) runMonthlyNudge(v);
     });
   }, [load, initCloud]);
+
+  // The scroll container persists across routes; start each surface at the top.
+  useEffect(() => {
+    mainRef.current?.scrollTo(0, 0);
+  }, [pathname]);
 
   if (!loaded) {
     return (
@@ -135,18 +186,30 @@ export default function App() {
   const showChrome = chromeVisible(pathname);
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="flex h-full flex-col">
       <Splash />
       {showChrome && <TopNav />}
-      <main className="flex-1 overflow-y-auto">
-        <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col px-5 pb-8 pt-4 sm:px-6">
-          <Routes>
+      <main ref={mainRef} className="flex-1 overflow-y-auto">
+        {/* Gentle enter-only route transition: fade + small rise, never an exit. */}
+        <motion.div
+          key={pathname}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: EASE_OUT }}
+          className="mx-auto flex min-h-full w-full max-w-3xl flex-col px-5 pb-8 pt-4 sm:px-6"
+        >
+          {/* Keyed by route so a crash on one surface doesn't strand the user:
+              navigating away mounts a fresh boundary. */}
+          <ErrorBoundary key={pathname}>
+          <Routes location={location}>
             <Route path="/" element={<RootGate />} />
             <Route path="/welcome" element={<OnboardingView />} />
             <Route path="/year/:year" element={<YearView />} />
             <Route path="/month/:key" element={<MonthView />} />
             <Route path="/goals/:year" element={<GoalsView />} />
             <Route path="/insights" element={<InsightsView />} />
+            <Route path="/reflect" element={<ReflectView />} />
             <Route path="/you" element={<YouView />} />
             <Route path="/years" element={<YearsView />} />
             <Route path="/lookback" element={<LookbackView />} />
@@ -156,10 +219,13 @@ export default function App() {
             <Route path="/ai" element={<AIView />} />
             <Route path="*" element={<RootGate />} />
           </Routes>
-        </div>
+          </ErrorBoundary>
+        </motion.div>
       </main>
       {showChrome && <BottomTabs />}
       <Analytics />
+      <Toaster />
     </div>
+    </MotionConfig>
   );
 }
