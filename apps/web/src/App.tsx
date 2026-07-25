@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Routes, Route, Navigate, NavLink, useLocation } from 'react-router-dom';
+import { Calendar, Target, BarChart3, User, Sparkles } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 import { MotionConfig, motion } from 'motion/react';
-import { Calendar, Target, Sparkles, User } from 'lucide-react';
 import { EASE_OUT } from './lib/motion';
 import { useVault } from './state/store';
 import { useCloud } from './state/cloud';
@@ -222,6 +223,7 @@ export default function App() {
         </motion.div>
       </main>
       {showChrome && <BottomTabs />}
+      <Analytics />
       <Toaster />
     </div>
     </MotionConfig>
