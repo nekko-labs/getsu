@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Sparkles, Plus, Loader2 } from 'lucide-react';
-import { type Month, type Goal, reflectionPrompts, summarizeMonth, mockProvider } from '@getsu/core';
+import { type Month, type Goal, reflectionPrompts, summarizeMonth, mockProvider, toast } from '@getsu/core';
 import { getAIProvider, aiConfigured } from '../lib/ai';
 
 /**
@@ -22,7 +22,8 @@ export default function AIAssist({ month, goals, onInsert }: { month: Month; goa
       if (which === 'prompts') setPrompts(await reflectionPrompts(provider, month, goals));
       else setSummary(await summarizeMonth(provider, month));
     } catch {
-      // On any provider error, degrade to the offline mock silently.
+      // Degrade to the offline mock, and say which writer the user is reading.
+      if (configured) toast.info('Claude was unreachable', 'These came from the built-in offline assistant instead.');
       if (which === 'prompts') setPrompts(await reflectionPrompts(mockProvider, month, goals));
       else setSummary(await summarizeMonth(mockProvider, month));
     } finally {

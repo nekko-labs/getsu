@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { type Vault, type Plan, seedDemoVault, reconcileVaults } from '@getsu/core';
+import { type Vault, type Plan, seedDemoVault, reconcileVaults, toast } from '@getsu/core';
 import { LIGHT, DARK, type Tokens } from './theme';
 import { getSyncProvider } from './sync';
 
@@ -44,7 +44,16 @@ interface State {
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 function persist(v: Vault) {
   if (saveTimer) clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => void AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(v)), 400);
+  // Losing a write is the one failure a local-first journal must announce.
+  saveTimer = setTimeout(
+    () => void AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(v)).catch((e: unknown) => {
+      toast.error(
+        "Couldn't save to this device",
+        e instanceof Error ? e.message : 'Your latest edits are only in memory until this succeeds.',
+      );
+    }),
+    400,
+  );
 }
 
 export const useVault = create<State>((set, get) => ({
@@ -102,8 +111,12 @@ export const useVault = create<State>((set, get) => ({
       if (action === 'pull') { persist(winner); set({ vault: winner }); }
       else if (action === 'push') { await provider.push(winner); }
       set({ syncStatus: 'synced', lastSyncedAt: Date.now() });
-    } catch {
+    } catch (e) {
       set({ syncStatus: 'error' });
+      toast.error(
+        "Couldn't sync your journal",
+        `${e instanceof Error ? e.message : 'Sync failed'} — your writing is still saved on this device.`,
+      );
     }
   },
 

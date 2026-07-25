@@ -7,6 +7,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useVault } from './src/store';
 import { handleDeepLink } from './src/intents';
+import ErrorBoundary from './src/ErrorBoundary';
+import Toaster from './src/Toaster';
 import YearScreen from './src/screens/YearScreen';
 import MonthScreen from './src/screens/MonthScreen';
 import GoalsScreen from './src/screens/GoalsScreen';
@@ -74,12 +76,15 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
-      <NavigationContainer theme={navTheme}>
-        <Stack.Navigator>
-          <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
-          <Stack.Screen name="Month" component={MonthScreen} options={{ title: '', headerBackTitle: 'Year', headerStyle: { backgroundColor: t.bg }, headerShadowVisible: false }} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <ErrorBoundary>
+        <NavigationContainer theme={navTheme}>
+          <Stack.Navigator>
+            <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
+            <Stack.Screen name="Month" component={MonthScreen} options={{ title: '', headerBackTitle: 'Year', headerStyle: { backgroundColor: t.bg }, headerShadowVisible: false }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ErrorBoundary>
+      <Toaster />
     </SafeAreaProvider>
   );
 }
