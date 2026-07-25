@@ -165,6 +165,8 @@ export function Dialog({
   const ref = useRef<HTMLDivElement>(null);
   // Read once, on mount: this is the element focus must come home to.
   const openerRef = useRef<HTMLElement | null>(typeof document === 'undefined' ? null : (document.activeElement as HTMLElement | null));
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
 
   useEffect(() => {
     const opener = openerRef.current;
@@ -186,31 +188,45 @@ export function Dialog({
     };
   }, []);
 
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      e.stopPropagation();
-      onClose();
-      return;
-    }
-    if (e.key !== 'Tab') return;
-    const nodes = Array.from(ref.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []).filter(
-      (n) => n.offsetParent !== null || n === document.activeElement,
-    );
-    if (nodes.length === 0) {
-      e.preventDefault();
-      return;
-    }
-    const first = nodes[0];
-    const last = nodes[nodes.length - 1];
-    const active = document.activeElement;
-    if (e.shiftKey && (active === first || active === ref.current)) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && active === last) {
-      e.preventDefault();
-      first.focus();
-    }
-  };
+  // Bound on the document rather than the dialog element: content is free to
+  // blur its own inputs (committing a caption, say), and Escape must still work
+  // when focus has fallen back to <body>.
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      const dialog = ref.current;
+      if (!dialog) return;
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        closeRef.current();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const nodes = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
+        (n) => n.offsetParent !== null || n === document.activeElement,
+      );
+      if (nodes.length === 0) {
+        e.preventDefault();
+        dialog.focus();
+        return;
+      }
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      const active = document.activeElement;
+      const inside = active instanceof Node && dialog.contains(active);
+      if (!inside) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (e.shiftKey && (active === first || active === dialog)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown, true);
+    return () => document.removeEventListener('keydown', onKeyDown, true);
+  }, []);
 
   return createPortal(
     <div
@@ -219,7 +235,6 @@ export function Dialog({
       aria-modal="true"
       aria-label={label}
       tabIndex={-1}
-      onKeyDown={onKeyDown}
       onClick={closeOnBackdrop ? (e) => { if (e.target === e.currentTarget) onClose(); } : undefined}
       className={className}
       style={style}

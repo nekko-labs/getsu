@@ -25,13 +25,20 @@ export default function Lightbox({ photos, index, onIndexChange, onClose, onCapt
   // Keep the caption draft in sync when navigating between photos.
   useEffect(() => { setDraft(photo?.caption ?? ''); }, [photo?.id]);
 
+  const commitCaption = () => { if (photo && draft !== (photo.caption ?? '')) onCaption(photo.id, draft); };
+
   const go = (delta: number) => {
     const next = index + delta;
-    if (next >= 0 && next < photos.length) onIndexChange(next);
+    if (next < 0 || next >= photos.length) return;
+    commitCaption(); // an in-progress caption must survive paging away
+    onIndexChange(next);
   };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // Arrows belong to the caption field while the user is typing in it.
+      const el = document.activeElement;
+      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || (el instanceof HTMLElement && el.isContentEditable)) return;
       if (e.key === 'ArrowLeft') go(-1);
       else if (e.key === 'ArrowRight') go(1);
     };
@@ -40,8 +47,6 @@ export default function Lightbox({ photos, index, onIndexChange, onClose, onCapt
   });
 
   if (!photo) return null;
-
-  const commitCaption = () => { if (draft !== (photo.caption ?? '')) onCaption(photo.id, draft); };
 
   return (
     <Dialog
