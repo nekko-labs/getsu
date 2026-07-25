@@ -4,74 +4,21 @@
 
 /* Getsu: "warm paper, calm ocean" design language.
    Warm cream/dark paper neutrals, soft diffuse shadows, generous radii,
-   one calm ocean-teal accent, mood as a color primitive. */
+   one calm ocean-teal accent, mood as a color primitive.
+
+   The colour/scrim/shadow custom properties themselves live in
+   `tokens.generated.css`, emitted from packages/shared/src/tokens.json (the
+   same file native reads). Edit the JSON, run `npm run tokens`. */
 
 :root {
-  --bg: #fbf7f1;          /* warm cream paper, never pure white */
-  --surface: #fffdfa;
-  --surface-2: #f0eae0;
-  --border: #eae1d4;
-  --text: #2b2724;        /* soft charcoal, never pure black */
-  --text-soft: #7a726a;
-  --text-faint: #a89f93;
-  --accent: #3e8fa0;      /* calm ocean teal */
-  --accent-2: #7fbfca;    /* lighter teal for gradients */
-  --accent-soft: #e6eff1;
-  --grad: linear-gradient(135deg, #3e8fa0, #7fbfca);
-  /* Subtle pearlescent sheen for the timeline month titles: mid-tone, legible
-     on cream, hue-shifting slate → mauve → ocean → warm gold. */
-  --pearl: linear-gradient(102deg, #66789f 0%, #8d7ba3 28%, #4f96a0 60%, #b58f57 100%);
-
-  /* Mood scale 1→5 (low → joyful). Used as the year-grid color primitive. */
-  --mood-1: #9ba6c9;      /* low / blue */
-  --mood-2: #a9c0d0;      /* meh / steel */
-  --mood-3: #c9c2ba;      /* neutral / sand */
-  --mood-4: #9fc6b0;      /* good / sage */
-  --mood-5: #f4c15b;      /* joyful / gold */
-
-  /* Semantic state colors: used for state only (sync, validation, goal-done),
-     never decoration. Tuned for >=4.5:1 text contrast on the paper/surface bg. */
-  --success: #2f8f66;
-  --error: #c2563a;
-  --warning: #b07d24;
   --info: var(--accent);
-
-  --shadow-soft: 0 1px 2px rgba(43, 39, 36, 0.04), 0 8px 24px -12px rgba(43, 39, 36, 0.12);
-  --shadow-lift: 0 2px 6px rgba(43, 39, 36, 0.06), 0 16px 40px -16px rgba(43, 39, 36, 0.22);
 
   /* Motion: ease-out only, no bounce/elastic. Product timing lives at call sites. */
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-}
 
-[data-theme='dark'] {
-  --bg: #1c1a18;          /* warm dark paper, not cold black */
-  --surface: #262320;
-  --surface-2: #2f2c27;
-  --border: #38332c;
-  --text: #ede6dc;
-  --text-soft: #a39a90;
-  --text-faint: #756f62;
-  --accent: #6fb3c2;      /* lifted ocean for contrast on dark */
-  --accent-2: #47899b;
-  --accent-soft: #21323a;
-  --grad: linear-gradient(135deg, #6fb3c2, #47899b);
-  /* Lighter, luminous pearl for dark paper. */
-  --pearl: linear-gradient(102deg, #aebbdd 0%, #c9b4dc 28%, #93d0d4 60%, #eccf8c 100%);
-
-  --mood-1: #8a93b4;
-  --mood-2: #8fa6b6;
-  --mood-3: #aaa49b;
-  --mood-4: #88b39c;
-  --mood-5: #e0b257;
-
-  --success: #5cb992;
-  --error: #e08163;
-  --warning: #d6a24a;
-  --info: var(--accent);
-
-  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px -14px rgba(0, 0, 0, 0.6);
-  --shadow-lift: 0 2px 8px rgba(0, 0, 0, 0.35), 0 18px 44px -16px rgba(0, 0, 0, 0.7);
+  /* Long-form measure for the journal surfaces (Reflect / Look back). */
+  --measure: 64ch;
 }
 
 html, body, #root {
@@ -123,7 +70,7 @@ body {
   .btn-primary {
     background: var(--accent);
     border-color: var(--accent);
-    color: white;
+    color: var(--on-accent);
   }
   .btn-primary:hover {
     filter: brightness(1.06);
@@ -143,6 +90,43 @@ body {
 
 .serif { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; }
 
+/* ---------- Journal microtypography (Reflect / Look back) ----------
+   The reflection surfaces are the emotional core, so they get printed-page
+   treatment rather than app treatment: a tuned measure, hyphenated justified
+   setting with hanging punctuation and optical sizing, old-style numerals.
+   `text-wrap: pretty` and `hanging-punctuation` degrade silently where they
+   aren't supported. */
+.journal {
+  font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+  font-optical-sizing: auto;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  font-kerning: normal;
+  font-feature-settings: 'liga' 1, 'clig' 1, 'kern' 1;
+  hanging-punctuation: first allow-end last;
+  letter-spacing: 0.002em;
+  text-wrap: pretty;
+}
+
+/* Justified setting is only honest with hyphenation: without it, justification
+   opens rivers of whitespace at this measure. */
+.journal-justify {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphenate-limit-chars: 7 3 3;
+}
+
+/* Narrow columns can't be justified without rivers; fall back to ragged right. */
+@media (max-width: 30rem) {
+  .journal-justify { text-align: left; }
+}
+
+.measure { max-width: var(--measure); }
+
+/* A leading quotation mark hangs into the margin so the text edge stays flush. */
+.journal-quote { text-indent: -0.42em; }
+
 /* Gentle, unhurried entrances (legitimate sibling stagger on lists only) */
 @keyframes rise {
   from { opacity: 0; transform: translateY(6px); }
@@ -153,6 +137,10 @@ body {
 /* Backdrop / overlay fade (lightbox). */
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 .animate-fade { animation: fade 0.18s ease-out both; }
+
+/* Toasts rise from the bottom edge of the surface they report on. */
+@keyframes toast-in { from { opacity: 0; transform: translateY(10px) scale(0.985); } to { opacity: 1; transform: none; } }
+.animate-toast-in { animation: toast-in 0.24s var(--ease-out-quint) both; }
 
 /* Onboarding CTA: the button rises in after the subtext; the arrow then slides
    in from the left so the underline reads as extending into the arrowhead. */

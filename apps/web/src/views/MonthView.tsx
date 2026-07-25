@@ -21,6 +21,7 @@ import {
 } from '@getsu/core';
 import { useVault } from '../state/store';
 import { Markdown, MarkdownEditor } from '../components/markdown';
+import { IconButton, SectionLabel } from '../components/ui';
 import Lightbox from '../components/Lightbox';
 import AIAssist from '../components/AIAssist';
 import { processImageFile } from '../lib/image';
@@ -111,12 +112,12 @@ export default function MonthView() {
           <ArrowLeft size={15} /> {year}
         </button>
         <div className="flex gap-2.5">
-          <button onClick={() => gotoMonth(-1)} className="grid h-10 w-10 place-items-center rounded-full transition active:scale-95" style={{ border: '1px solid var(--border)', color: 'var(--text)' }} aria-label="Previous month">
+          <IconButton onClick={() => gotoMonth(-1)} label="Previous month">
             <ChevronLeft size={18} strokeWidth={1.8} />
-          </button>
-          <button onClick={() => gotoMonth(1)} className="grid h-10 w-10 place-items-center rounded-full transition active:scale-95" style={{ border: '1px solid var(--border)', color: 'var(--text)' }} aria-label="Next month">
+          </IconButton>
+          <IconButton onClick={() => gotoMonth(1)} label="Next month">
             <ChevronRight size={18} strokeWidth={1.8} />
-          </button>
+          </IconButton>
         </div>
       </div>
 
@@ -124,11 +125,16 @@ export default function MonthView() {
 
       {/* journal */}
       <section className="mt-6">
-        <div className="mb-3.5 flex items-center justify-between">
-          <span className="text-[10.5px] font-semibold uppercase tracking-[1.6px]" style={{ color: 'var(--text-faint)' }}>Journal</span>
-          <button onClick={() => setEditing((e) => !e)} className="text-[12.5px] font-semibold" style={{ color: 'var(--accent)' }}>
-            {editing ? 'Done' : 'Edit'}
-          </button>
+        <div className="mb-3.5">
+          <SectionLabel
+            right={
+              <button onClick={() => setEditing((e) => !e)} className="text-[12.5px] font-semibold" style={{ color: 'var(--accent)' }}>
+                {editing ? 'Done' : 'Edit'}
+              </button>
+            }
+          >
+            Journal
+          </SectionLabel>
         </div>
         {editing ? (
           <MarkdownEditor value={reflection} onChange={setReflection} autoFocus />
@@ -143,9 +149,10 @@ export default function MonthView() {
 
       {/* goals this month */}
       <section className="mt-7 border-t pt-6" style={{ borderColor: 'var(--border)' }}>
-        <div className="mb-4 flex items-center justify-between">
-          <span className="text-[10.5px] font-semibold uppercase tracking-[1.6px]" style={{ color: 'var(--text-faint)' }}>Goals this month</span>
-          <span className="text-[11px]" style={{ color: 'var(--text-faint)' }}>{photoCount}/{limit} photos</span>
+        <div className="mb-4">
+          <SectionLabel right={<span className="text-[11px]" style={{ color: 'var(--text-faint)' }}>{photoCount}/{limit} photos</span>}>
+            Goals this month
+          </SectionLabel>
         </div>
 
         {goals.length === 0 ? (
@@ -169,7 +176,7 @@ export default function MonthView() {
                       style={{
                         border: done ? '1px solid var(--success)' : '1px solid var(--border)',
                         background: done ? 'var(--success)' : 'transparent',
-                        color: done ? '#fff' : 'var(--text-faint)',
+                        color: done ? 'var(--on-accent)' : 'var(--text-faint)',
                       }}
                       aria-label={done ? 'Mark not done' : 'Mark done'}
                     >
@@ -189,7 +196,7 @@ export default function MonthView() {
                         {p.caption && (
                           <span
                             className="absolute inset-x-0 bottom-0 truncate px-1.5 py-1 text-left text-[9px] font-medium leading-none"
-                            style={{ background: 'linear-gradient(transparent, rgba(0,0,0,.6))', color: '#fff' }}
+                            style={{ background: 'var(--caption-scrim)', color: 'var(--on-scrim)' }}
                           >
                             {p.caption}
                           </span>
@@ -212,13 +219,13 @@ export default function MonthView() {
         )}
 
         {limitHit && (
-          <div className="mt-5 flex items-center gap-3 rounded-2xl p-4" style={{ background: 'var(--accent-soft)' }}>
+          <div className="mt-5 flex items-center gap-3 rounded-2xl p-4" style={{ background: 'var(--accent-soft)' }} role="status">
             <Lock size={16} style={{ color: 'var(--accent)' }} />
             <p className="flex-1 text-[13px]" style={{ color: 'var(--text)' }}>
               You've reached {limit} photos this month.{plan === 'free' ? ' Premium keeps up to 25 a month.' : ''}
             </p>
             {plan === 'free' && (
-              <motion.button whileTap={{ scale: 0.97 }} onClick={() => navigate('/pricing')} className="shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold" style={{ background: 'var(--accent)', color: '#fff' }}>Upgrade</motion.button>
+              <motion.button whileTap={{ scale: 0.97 }} onClick={() => navigate('/pricing')} className="shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold" style={{ background: 'var(--accent)', color: 'var(--on-accent)' }}>Upgrade</motion.button>
             )}
           </div>
         )}
@@ -227,7 +234,7 @@ export default function MonthView() {
       {/* trackers — quiet monthly entry, only when any are defined */}
       {trackers.length > 0 && (
         <section className="mt-7 border-t pt-6" style={{ borderColor: 'var(--border)' }}>
-          <div className="mb-4 text-[10.5px] font-semibold uppercase tracking-[1.6px]" style={{ color: 'var(--text-faint)' }}>This month</div>
+          <div className="mb-4"><SectionLabel>This month</SectionLabel></div>
           <div className="flex flex-col gap-4">
             {trackers.map((t) => {
               const raw = monthObj?.trackers[t.id];
@@ -242,7 +249,7 @@ export default function MonthView() {
                     <button
                       onClick={() => setTracker(t.id, !(raw === true))}
                       className="rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition active:scale-95"
-                      style={{ background: raw === true ? 'var(--success)' : 'var(--surface-2)', color: raw === true ? '#fff' : 'var(--text-soft)' }}
+                      style={{ background: raw === true ? 'var(--success)' : 'var(--surface-2)', color: raw === true ? 'var(--on-accent)' : 'var(--text-soft)' }}
                     >
                       {raw === true ? 'Yes' : 'No'}
                     </button>
@@ -255,7 +262,7 @@ export default function MonthView() {
                             key={n}
                             onClick={() => setTracker(t.id, raw === n ? 0 : n)}
                             className="h-6 w-6 rounded-full text-[11px] font-semibold transition active:scale-90"
-                            style={{ background: on ? (t.color ?? 'var(--accent)') : 'var(--surface-2)', color: on ? '#fff' : 'var(--text-faint)' }}
+                            style={{ background: on ? (t.color ?? 'var(--accent)') : 'var(--surface-2)', color: on ? 'var(--on-accent)' : 'var(--text-faint)' }}
                             aria-label={`${t.name} ${n}`}
                           >
                             {n}

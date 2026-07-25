@@ -7,17 +7,19 @@ import {
   reflectOnJourneyMock,
   reflectOnJourney,
   photoMemories,
+  toast,
   type JourneyReflection,
 } from '@getsu/core';
 import { useVault } from '../state/store';
 import { aiConfigured, getAIProvider } from '../lib/ai';
 import { riseItem } from '../lib/motion';
+import { EmptyState, SectionLabel, SoftButton } from '../components/ui';
 
 /** The three reflection groups, each with its own quiet accent + icon. */
 const GROUPS: { key: keyof JourneyReflection; label: string; icon: typeof Star; color: string }[] = [
   { key: 'highlights', label: 'Highlights', icon: Star, color: 'var(--accent)' },
-  { key: 'growth', label: 'Areas of growth', icon: Sprout, color: '#7aa889' },
-  { key: 'workOn', label: 'To work on', icon: Compass, color: '#cc7f6a' },
+  { key: 'growth', label: 'Areas of growth', icon: Sprout, color: 'var(--growth)' },
+  { key: 'workOn', label: 'To work on', icon: Compass, color: 'var(--attention)' },
 ];
 
 export default function ReflectView() {
@@ -39,8 +41,10 @@ export default function ReflectView() {
     try {
       setReflection(await reflectOnJourney(getAIProvider(), material));
       setDeepened(true);
-    } catch {
-      /* keep the offline reflection on any error */
+    } catch (e) {
+      // Keep the offline reflection, but never fail silently: the user asked
+      // for a real API call and deserves to know it didn't happen.
+      toast.error('Claude could not deepen this reflection', e instanceof Error ? e.message : 'Check your key under You → Journaling assist.');
     } finally {
       setLoading(false);
     }
@@ -50,12 +54,12 @@ export default function ReflectView() {
     // Page entrance comes from the route transition in App.tsx.
     <div>
       <h1 className="serif mb-1.5 mt-1.5 text-3xl font-semibold tracking-tight">Reflect</h1>
-      <p className="mb-6 text-[13.5px] leading-relaxed" style={{ color: 'var(--text-soft)' }}>
+      <p className="measure mb-6 text-[13.5px] leading-relaxed" style={{ color: 'var(--text-soft)' }}>
         Your memories, and what they add up to.
       </p>
 
       {/* memories */}
-      <div className="mb-3.5 text-[10.5px] font-semibold uppercase tracking-[1.6px]" style={{ color: 'var(--text-faint)' }}>Memories</div>
+      <div className="mb-3.5"><SectionLabel>Memories</SectionLabel></div>
       {memories.length > 0 ? (
         <div className="-mx-5 flex snap-x gap-3 overflow-x-auto px-5 pb-2 sm:-mx-6 sm:px-6" style={{ scrollbarWidth: 'none' }}>
           {memories.map((m, i) => (
@@ -70,9 +74,9 @@ export default function ReflectView() {
               style={{ background: 'var(--surface-2)', boxShadow: 'var(--shadow-soft)' }}
             >
               <img src={m.photo.src} alt={m.photo.caption ?? ''} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-[1.04]" />
-              <div className="absolute inset-x-0 bottom-0 p-2.5" style={{ background: 'linear-gradient(transparent, rgba(0,0,0,.62))' }}>
-                <div className="text-[10px] font-semibold uppercase tracking-[1.2px] text-white/75">{m.label}</div>
-                {m.photo.caption && <div className="mt-0.5 line-clamp-2 text-[12px] font-medium leading-snug text-white">{m.photo.caption}</div>}
+              <div className="absolute inset-x-0 bottom-0 p-2.5" style={{ background: 'var(--caption-scrim)' }}>
+                <div className="text-[10px] font-semibold uppercase tracking-[1.2px]" style={{ color: 'var(--on-scrim-soft)' }}>{m.label}</div>
+                {m.photo.caption && <div className="mt-0.5 line-clamp-2 text-[12px] font-medium leading-snug" style={{ color: 'var(--on-scrim)' }}>{m.photo.caption}</div>}
               </div>
             </motion.button>
           ))}
@@ -91,7 +95,7 @@ export default function ReflectView() {
               style={{ background: 'var(--surface-2)' }}
             >
               <div className="text-[10px] font-semibold uppercase tracking-[1.2px]" style={{ color: 'var(--text-faint)' }}>{r.label}</div>
-              <p className="serif text-[15px] italic leading-relaxed" style={{ color: 'var(--text-soft)' }}>
+              <p className="journal journal-quote text-[15px] italic leading-relaxed" style={{ color: 'var(--text-soft)' }}>
                 “{r.text}”
               </p>
               <div />
@@ -99,27 +103,29 @@ export default function ReflectView() {
           ))}
         </div>
       ) : (
-        <div className="flex items-center gap-3 rounded-2xl px-4 py-5" style={{ background: 'var(--surface-2)' }}>
-          <Camera size={18} style={{ color: 'var(--text-faint)' }} />
-          <p className="text-[13px] leading-relaxed" style={{ color: 'var(--text-soft)' }}>
-            Photos you add to your months show up here as memories.
-          </p>
-        </div>
+        <EmptyState icon={<Camera size={18} style={{ color: 'var(--text-faint)' }} />}>
+          Photos you add to your months show up here as memories.
+        </EmptyState>
       )}
 
       {/* reflection */}
       <div className="mt-8 border-t pt-6" style={{ borderColor: 'var(--border)' }}>
-        <div className="mb-1 flex items-center justify-between">
-          <div className="text-[10.5px] font-semibold uppercase tracking-[1.6px]" style={{ color: 'var(--text-faint)' }}>Reflection</div>
-          <span className="text-[11px]" style={{ color: 'var(--text-faint)' }}>
-            {deepened ? 'by Claude' : `${material.monthsJournaled} months`}
-          </span>
+        <div className="mb-1">
+          <SectionLabel
+            right={
+              <span className="text-[11px]" style={{ color: 'var(--text-faint)' }}>
+                {deepened ? 'by Claude' : `${material.monthsJournaled} months`}
+              </span>
+            }
+          >
+            Reflection
+          </SectionLabel>
         </div>
-        <p className="mb-6 text-[12.5px] leading-relaxed" style={{ color: 'var(--text-soft)' }}>
+        <p className="measure mb-6 text-[12.5px] leading-relaxed" style={{ color: 'var(--text-soft)' }}>
           A gentle read of everything you've written so far.
         </p>
 
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8" aria-busy={loading} aria-live="polite">
           {GROUPS.map((g) => {
             const items = reflection[g.key];
             if (!items.length) return null;
@@ -140,8 +146,8 @@ export default function ReflectView() {
                       custom={i}
                       className="flex gap-3"
                     >
-                      <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: g.color }} />
-                      <span className="text-[14.5px] leading-relaxed" style={{ color: 'var(--text-soft)' }}>{t}</span>
+                      <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: g.color }} />
+                      <span className="journal journal-justify measure text-[15.5px] leading-[1.65]" style={{ color: 'var(--text-soft)' }}>{t}</span>
                     </motion.li>
                   ))}
                 </ul>
@@ -151,17 +157,16 @@ export default function ReflectView() {
         </div>
 
         {aiOn ? (
-          <button
+          <SoftButton
             onClick={deepen}
             disabled={loading}
-            className="mt-7 inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition active:scale-95 disabled:opacity-60"
-            style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+            className="mt-7"
+            icon={loading ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
           >
-            {loading ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
             {deepened ? 'Reflect again' : 'Go deeper with Claude'}
-          </button>
+          </SoftButton>
         ) : (
-          <p className="mt-7 text-[12px] leading-relaxed" style={{ color: 'var(--text-faint)' }}>
+          <p className="measure mt-7 text-[12px] leading-relaxed" style={{ color: 'var(--text-faint)' }}>
             Reflected offline. Add a Claude key under{' '}
             <button onClick={() => navigate('/ai')} className="font-semibold underline" style={{ color: 'var(--accent)' }}>You → Journaling assist</button>{' '}
             for a deeper read.

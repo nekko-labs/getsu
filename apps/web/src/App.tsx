@@ -7,6 +7,8 @@ import { useVault } from './state/store';
 import { useCloud } from './state/cloud';
 import { runMonthlyNudge } from './lib/nudge';
 import Splash from './components/Splash';
+import ErrorBoundary from './components/ErrorBoundary';
+import Toaster from './components/Toaster';
 import BrandMark from './components/BrandMark';
 import OnboardingView, { ONBOARD_KEY } from './views/OnboardingView';
 import YearView from './views/YearView';
@@ -196,6 +198,9 @@ export default function App() {
           transition={{ duration: 0.3, ease: EASE_OUT }}
           className="mx-auto flex min-h-full w-full max-w-3xl flex-col px-5 pb-8 pt-4 sm:px-6"
         >
+          {/* Keyed by route so a crash on one surface doesn't strand the user:
+              navigating away mounts a fresh boundary. */}
+          <ErrorBoundary key={pathname}>
           <Routes location={location}>
             <Route path="/" element={<RootGate />} />
             <Route path="/welcome" element={<OnboardingView />} />
@@ -213,9 +218,11 @@ export default function App() {
             <Route path="/ai" element={<AIView />} />
             <Route path="*" element={<RootGate />} />
           </Routes>
+          </ErrorBoundary>
         </motion.div>
       </main>
       {showChrome && <BottomTabs />}
+      <Toaster />
     </div>
     </MotionConfig>
   );
