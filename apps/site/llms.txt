@@ -1,0 +1,35 @@
+# Getsu
+
+> A calm, anti-streak **monthly** journal and goal tracker. Set your goals for the year, place each one on the month where it will happen, and write one entry a month with the moments that mattered. Local-first, open source (MIT), free to use, by Nekko Labs.
+
+Getsu (月, "month") is the antidote to daily-habit apps that turn into a chore and get abandoned. Daily is too much, a year is too long, a month is just right: often enough to remember, rare enough to stay calm. There are no streaks to break and no daily notifications. Your journal is written as plain files in a folder you own, works fully offline, and exports to markdown and JSON at any time.
+
+## Key facts
+
+- **What it is**: monthly journaling + yearly goal planning in one app (web today, native planned).
+- **Who it is for**: people who want to remember their year and actually finish their goals, without the guilt loop of daily-streak apps.
+- **How it works**: yearly goals get placed on the months they belong to, then one calm entry per month captures highlights, optional struggles, a mood, photos, and goal check-ins. Look back at a timeline of past months, "this month last year," and a year in review.
+- **Data ownership**: local-first. Storage is your browser (IndexedDB) plus a folder you choose via the File System Access API. Plain-file export any time. Your data is never sold.
+- **Pricing**: the whole journal is free with no account (every view, unlimited goals and entries, insights, export). Premium is $6/month, $3/month for the first three months, and adds cross-device sync, more photo storage, and cloud backup. Writing is never behind a paywall.
+- **Licence**: MIT, open source, self-hostable.
+- **Stack**: Vite + React + TypeScript, Tailwind CSS, Zustand, a pure-TypeScript core engine.
+
+## Pages
+
+- [Home](https://getsu.app/): what Getsu is, the monthly ritual, and the case for a month-scale journal.
+- [Open the app](https://getsu.app/app/): the real app, seeded with a demo year, no account needed.
+- [Pricing](https://getsu.app/pricing): free vs Premium, the "never a paywall on writing" promise, and FAQ.
+- [Privacy](https://getsu.app/privacy): local-first by default, no account, no analytics, no tracking; optional AI and sync explained.
+- [Terms](https://getsu.app/terms): plain-language terms of use.
+
+## Source
+
+- [GitHub repository](https://github.com/nekko-labs/getsu): source, issues, and releases.
+- [README](https://github.com/nekko-labs/getsu/blob/main/README.md): overview, features, and local development.
+
+## Common questions
+
+- **What do I get without paying?** The whole journal: every view, unlimited goals and entries, insights, and export, with no account. The only limits are photo storage and features that need a second device.
+- **What happens if I stop paying?** Nothing happens to your journal, it lives on your disk. Sync and backup pause until you return.
+- **Where does my data live?** On your device, as plain files in a folder you choose. With Premium a private snapshot also syncs through our cloud (encrypted in transit and at rest, not end-to-end).
+- **Can I take my journal elsewhere?** Always. Export produces plain markdown and JSON, and the app is MIT licensed.
