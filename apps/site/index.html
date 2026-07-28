@@ -17,7 +17,16 @@
   <meta property="og:url" content="https://getsu.app/" />
   <meta property="og:title" content="Getsu · a month at a time" />
   <meta property="og:description" content="A calm, anti-streak monthly journal. Local-first, free, and yours." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:image" content="https://getsu.app/logo.png" />
+  <meta property="og:image:width" content="1024" />
+  <meta property="og:image:height" content="1024" />
+  <meta property="og:image:alt" content="The Getsu moon mark" />
   <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Getsu · a month at a time" />
+  <meta name="twitter:description" content="A calm, anti-streak monthly journal. Local-first, free, and yours." />
+  <meta name="twitter:image" content="https://getsu.app/logo.png" />
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -189,6 +198,68 @@
       .price { padding:104px 0 96px; }
     }
   </style>
+  <!-- Structured data: helps search engines and answer engines describe Getsu accurately -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://nekkolabs.com/#organization",
+        "name": "Nekko Labs",
+        "url": "https://nekkolabs.com/"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://getsu.app/#website",
+        "url": "https://getsu.app/",
+        "name": "Getsu",
+        "description": "A calm, anti-streak monthly journal and goal tracker. Local-first, open source, and yours.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://nekkolabs.com/#organization" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://getsu.app/#app",
+        "name": "Getsu",
+        "url": "https://getsu.app/",
+        "applicationCategory": "LifestyleApplication",
+        "applicationSubCategory": "Journaling and goal tracking",
+        "operatingSystem": "Web browser",
+        "image": "https://getsu.app/logo.png",
+        "description": "A monthly journal and goal tracker: set your goals for the year, place each on the month where it will happen, and write one calm entry a month. No daily nags, no streaks to break. Local-first, your journal is plain files in a folder you own.",
+        "license": "https://opensource.org/licenses/MIT",
+        "isAccessibleForFree": true,
+        "featureList": [
+          "Year view with a 12-month grid and yearly goals",
+          "Month view with reflection, highlights, optional struggles, photos, and trackers",
+          "Yearly goals broken into monthly intentions",
+          "Look back: past-month timeline, this month last year, year in review",
+          "Local-first vault: plain files in a folder you own, works offline",
+          "Markdown and JSON export"
+        ],
+        "publisher": { "@id": "https://nekkolabs.com/#organization" },
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Free",
+            "price": "0",
+            "priceCurrency": "USD",
+            "description": "The whole journal: every view, unlimited goals and entries, insights, and export. No account needed."
+          },
+          {
+            "@type": "Offer",
+            "name": "Premium",
+            "price": "6",
+            "priceCurrency": "USD",
+            "url": "https://getsu.app/pricing",
+            "description": "Adds cross-device sync, more photo storage, and cloud backup. Billed monthly."
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <nav class="nav an">
