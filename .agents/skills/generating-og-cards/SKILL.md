@@ -81,6 +81,8 @@ project's:
 - real brand mark and background art paths
 - typography and title sizing
 - optional mark treatment such as pixelation
+- optional `fadeEnd` when an artwork element near the left edge needs to stay
+  visible through the text fade
 
 The renderer in this skill composes that configuration in HTML using real
 installed fonts and screenshots it at exactly `1200x630` with headless

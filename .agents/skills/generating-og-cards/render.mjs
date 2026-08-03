@@ -94,6 +94,24 @@ const cards = [
     footer: 'Open source · MIT / Apache-2.0 · Pre-release',
     titleSize: 62,
   },
+  {
+    id: 'simplesharing',
+    art: '/home/ubuntu/og/art/simplesharing-bg.png',
+    mark: null,
+    bg: '#fdfdfc',
+    ink: '#16181d',
+    soft: '#5c6270',
+    accent: '#2b59ff',
+    titleFont: "Inter, system-ui, sans-serif",
+    bodyFont: "Inter, system-ui, sans-serif",
+    monoFont: "'JetBrains Mono', monospace",
+    eyebrow: 'simplesharing.app',
+    title: 'Your agents make things.<br>Now share them.',
+    sub: 'Markdown reports, HTML dashboards, Claude skills: drop one in and get a beautiful link anyone can open.',
+    footer: 'Markdown · HTML · Claude skills · Early preview',
+    titleSize: 52,
+    fadeEnd: 54,
+  },
 ];
 
 function imageDataUri(file) {
@@ -112,7 +130,7 @@ const html = (c) => `<!doctype html>
   .card { position:relative; width:1200px; height:630px; overflow:hidden; }
   .art { position:absolute; top:0; right:0; height:630px; width:auto; }
   .fade { position:absolute; inset:0;
-    background:linear-gradient(to right, ${c.bg} 0%, ${c.bg} 34%, ${hexA(c.bg, 0.92)} 44%, ${hexA(c.bg, 0.0)} 62%); }
+    background:linear-gradient(to right, ${c.bg} 0%, ${c.bg} 34%, ${hexA(c.bg, 0.92)} ${c.fadeEnd ? c.fadeEnd - 18 : 44}%, ${hexA(c.bg, 0.0)} ${c.fadeEnd ?? 62}%); }
   .content { position:absolute; inset:0; padding:64px 70px; display:flex; flex-direction:column; }
   .top { display:flex; align-items:center; gap:16px; }
   .mark { width:52px; height:52px; ${c.markPixelated ? 'image-rendering:pixelated;' : ''} border-radius:${c.markRadius ?? 12}px; }
