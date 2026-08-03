@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const OUT = '/home/ubuntu/og/out';
+const OUT = process.env.OG_OUT ?? '/home/ubuntu/og/out';
 fs.mkdirSync(OUT, { recursive: true });
 
 const cards = [

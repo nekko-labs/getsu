@@ -16,6 +16,7 @@ current Google Fonts files and the small script below downloads every referenced
 font face:
 
 ```bash
+mkdir -p /home/ubuntu/og/art /home/ubuntu/og/out
 mkdir -p ~/.fonts
 curl -fsSL -A 'Mozilla/5.0' \
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;700&display=swap' \
@@ -29,15 +30,25 @@ fc-match Fraunces
 fc-match 'JetBrains Mono'
 ```
 
-Install the renderer dependency and Playwright's own Chromium. Do not point
-Playwright at a system Chrome executable; use its bundled browser:
+Install the renderer dependency beside `render.mjs`, where Node's module
+resolution will actually find it. Installing only in the working directory is
+not sufficient: Node resolves bare imports from the script's directory upward,
+not from the current working directory. The checked-in `package.json` makes the
+skill self-contained:
 
 ```bash
-cd /home/ubuntu/og
-npm install playwright
+cd /home/ubuntu/repos/getsu/.agents/skills/generating-og-cards
+npm install
 npx playwright install chromium
 # If the browser reports missing shared libraries:
 # sudo npx playwright install --with-deps chromium
+```
+
+Do not point Playwright at a system Chrome executable; use its bundled browser.
+For reference, from this skill directory the dependency should resolve with:
+
+```bash
+node -e "console.log(require.resolve('playwright'))"
 ```
 
 ## Two-stage workflow
@@ -76,15 +87,22 @@ installed fonts and screenshots it at exactly `1200x630` with headless
 Chromium:
 
 ```bash
-cd /home/ubuntu/og
-node /home/ubuntu/repos/getsu/.agents/skills/generating-og-cards/render.mjs getsu
+cd /home/ubuntu/repos/getsu/.agents/skills/generating-og-cards
+node render.mjs getsu
 identify /home/ubuntu/og/out/getsu-og.png
 ```
 
 It may render every configured card when no project id is supplied:
 
 ```bash
-node /home/ubuntu/repos/getsu/.agents/skills/generating-og-cards/render.mjs
+node render.mjs
+```
+
+Set `OG_OUT` to write cards somewhere else; it defaults to
+`/home/ubuntu/og/out`:
+
+```bash
+OG_OUT=/tmp/og-out node render.mjs getsu
 ```
 
 ### Important image-loading gotcha
@@ -107,6 +125,8 @@ For every page that emits social metadata:
 - Include `og:image:height` = `630`.
 - Include `og:image:type` = `image/png`.
 - Include descriptive `og:image:alt`.
+- Target exactly `1200x630` (a 1.91:1 aspect ratio). X/Twitter and Facebook
+  may crop materially different ratios even when the source image is larger.
 - Set `twitter:card` to `summary_large_image`.
 - Set an absolute HTTPS `twitter:image`.
 - Twitter fields use `name="twitter:*"`, not `property="twitter:*"`.
@@ -124,9 +144,11 @@ static asset directory and verify that the deployment build includes it.
 The minimum non-visual verification is:
 
 ```bash
-cd /home/ubuntu/og
+mkdir -p /home/ubuntu/og/art /home/ubuntu/og/out
+cd /home/ubuntu/repos/getsu/.agents/skills/generating-og-cards
+npm install
 npx playwright install chromium
-node /home/ubuntu/repos/getsu/.agents/skills/generating-og-cards/render.mjs getsu
+node render.mjs getsu
 identify /home/ubuntu/og/out/getsu-og.png
 ```
 
@@ -134,6 +156,14 @@ Expected output dimensions are `1200x630`. A successful render also proves the
 image-load assertion passed. Visual inspection is still required where an image
 viewer is available: check that the art and mark are visible, text is crisp and
 uncropped, and text does not collide with the artwork.
+
+`identify` is provided by ImageMagick. Install it on a fresh Debian/Ubuntu
+machine if it is unavailable:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y imagemagick
+```
 
 ## Devin Secrets Needed
 
