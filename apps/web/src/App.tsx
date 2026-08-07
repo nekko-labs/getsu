@@ -21,6 +21,7 @@ import YouView from './views/YouView';
 import LookbackView from './views/LookbackView';
 import YearsView from './views/YearsView';
 import AccountView from './views/AccountView';
+import AuthView from './views/AuthView';
 import PricingView from './views/PricingView';
 import TrackersView from './views/TrackersView';
 import AIView from './views/AIView';
@@ -214,6 +215,7 @@ export default function App() {
             <Route path="/years" element={<YearsView />} />
             <Route path="/lookback" element={<LookbackView />} />
             <Route path="/account" element={<AccountView />} />
+            <Route path="/auth" element={<AuthView />} />
             <Route path="/pricing" element={<PricingView />} />
             <Route path="/trackers" element={<TrackersView />} />
             <Route path="/ai" element={<AIView />} />
