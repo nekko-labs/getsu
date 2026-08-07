@@ -3,20 +3,34 @@
    motion is enter-only, ease-out, and respects reduced motion. */
 
 :root {
-  --bg:#fbf7f1; --surface:#fffdfa; --border:#eae1d4;
+  --bg:#fbf7f1; --surface:#fffdfa; --surface-2:#f0eae0; --border:#eae1d4;
   --text:#2b2724; --soft:#7a726a; --faint:#a89f93;
-  --accent:#3e8fa0; --accent-soft:rgba(62,143,160,.09);
+  --accent:#3e8fa0; --accent-2:#7fbfca; --accent-soft:rgba(62,143,160,.09);
+  --grad:linear-gradient(135deg,#3e8fa0,#7fbfca);
+  --pearl:linear-gradient(102deg,#66789f 0%,#8d7ba3 28%,#4f96a0 60%,#b58f57 100%);
   --mood-1:#9ba6c9; --mood-2:#a9c0d0; --mood-3:#c9c2ba; --mood-4:#9fc6b0; --mood-5:#f4c15b;
   --ease:cubic-bezier(.22,1,.36,1);
+  --shadow-soft:0 1px 2px rgba(43,39,36,.04), 0 8px 24px -12px rgba(43,39,36,.12);
   --shadow:0 2px 8px rgba(43,39,36,.05), 0 24px 60px -28px rgba(43,39,36,.28);
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:#1c1a18; --surface:#262320; --border:#38332c;
+    --bg:#1c1a18; --surface:#262320; --surface-2:#2f2c27; --border:#38332c;
     --text:#ede6dc; --soft:#a39a90; --faint:#756f62;
-    --accent:#6fb3c2; --accent-soft:rgba(111,179,194,.12);
+    --accent:#6fb3c2; --accent-2:#47899b; --accent-soft:rgba(111,179,194,.12);
+    --grad:linear-gradient(135deg,#6fb3c2,#47899b);
+    --pearl:linear-gradient(102deg,#aebbdd 0%,#c9b4dc 28%,#93d0d4 60%,#eccf8c 100%);
+    --shadow-soft:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.6);
     --shadow:0 2px 8px rgba(0,0,0,.35), 0 24px 60px -28px rgba(0,0,0,.7);
   }
+}
+
+/* Pearlescent text fill, the app's timeline signature. Falls back to solid
+   text where background-clip:text is unsupported. */
+.pearl-text {
+  background:var(--pearl);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
 }
 
 * { box-sizing:border-box; margin:0; padding:0; }
