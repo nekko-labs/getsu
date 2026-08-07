@@ -37,6 +37,42 @@ export async function signInWithEmail(email: string): Promise<{ error?: string }
   return { error: error?.message };
 }
 
+/** Create an account with email + password. When the Supabase project requires
+ *  email confirmation there is no session yet; the caller shows a check-your-inbox
+ *  notice (`confirmEmail: true`). */
+export async function signUpWithPassword(
+  email: string,
+  password: string,
+): Promise<{ error?: string; confirmEmail?: boolean }> {
+  const sb = getSupabase();
+  if (!sb) return { error: 'Cloud is not configured.' };
+  const { data, error } = await sb.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: window.location.origin + window.location.pathname },
+  });
+  if (error) return { error: error.message };
+  return { confirmEmail: !data.session };
+}
+
+/** Sign in with email + password. */
+export async function signInWithPassword(email: string, password: string): Promise<{ error?: string }> {
+  const sb = getSupabase();
+  if (!sb) return { error: 'Cloud is not configured.' };
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  return { error: error?.message };
+}
+
+/** Email a password-reset link. */
+export async function sendPasswordReset(email: string): Promise<{ error?: string }> {
+  const sb = getSupabase();
+  if (!sb) return { error: 'Cloud is not configured.' };
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + window.location.pathname,
+  });
+  return { error: error?.message };
+}
+
 export async function signOut(): Promise<void> {
   await getSupabase()?.auth.signOut();
 }
