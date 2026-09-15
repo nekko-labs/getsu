@@ -1,9 +1,8 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Cloud, CloudOff, RefreshCw, LogOut, Mail, Check, Sparkles } from 'lucide-react';
+import { Cloud, CloudOff, RefreshCw, LogOut, LogIn, UserPlus, Sparkles } from 'lucide-react';
 import { PageHeader, Section } from '../components/ui';
 import { useCloud } from '../state/cloud';
-import { isCloudConfigured, signInWithEmail } from '../lib/supabase';
+import { isCloudConfigured } from '../lib/supabase';
 
 function SyncBadge() {
   const status = useCloud((s) => s.status);
@@ -27,34 +26,17 @@ function SyncBadge() {
   );
 }
 
-function SignInForm() {
-  const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const submit = async () => {
-    setError(null);
-    const { error } = await signInWithEmail(email.trim());
-    if (error) setError(error);
-    else setSent(true);
-  };
-  if (sent) {
-    return (
-      <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--success)' }}>
-        <Check size={16} /> Check your email for a magic sign-in link.
-      </div>
-    );
-  }
+function SignInPrompt() {
   return (
     <div>
-      <p className="mb-3 text-sm" style={{ color: 'var(--text-soft)' }}>
-        Sign in with a magic link, no password. Your local journal stays exactly as it is and merges with the cloud.
+      <p className="mb-4 text-sm" style={{ color: 'var(--text-soft)' }}>
+        Sign in (or create an account) to sync your journal across devices. Your local
+        journal stays exactly as it is and merges with the cloud, never overwrites.
       </p>
-      <div className="flex gap-2">
-        <input className="input" type="email" placeholder="you@example.com" value={email}
-          onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && submit()} />
-        <button className="btn btn-primary shrink-0" onClick={submit}><Mail size={16} /> Send link</button>
+      <div className="flex flex-wrap gap-2">
+        <Link to="/auth" className="btn btn-primary"><LogIn size={15} /> Sign in</Link>
+        <Link to="/auth" className="btn"><UserPlus size={15} /> Create an account</Link>
       </div>
-      {error && <p className="mt-2 text-sm" style={{ color: 'var(--error)' }}>We couldn't send the link ({error.toLowerCase()}). Check the address and try again.</p>}
     </div>
   );
 }
@@ -87,7 +69,7 @@ export default function AccountView() {
           </div>
         </Section>
       ) : !session ? (
-        <Section title="Sign in to sync"><SignInForm /></Section>
+        <Section title="Sign in to sync"><SignInPrompt /></Section>
       ) : (
         <div className="space-y-5">
           <Section title="Signed in">

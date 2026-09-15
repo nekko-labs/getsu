@@ -1,6 +1,6 @@
 ---
 status: active
-last-updated: 2026-07-12
+last-updated: 2026-08-07
 owner: Philip
 ---
 
@@ -101,7 +101,7 @@ Trackers measure **monthly totals/trends**, not daily streaks. A tracker is a co
 
 ## Integrations & APIs
 
-- **Supabase** (optional cloud): magic-link auth; whole-vault JSONB snapshot with last-write-wins reconciliation (`reconcileVaults` in core); RLS via `supabase/schema.sql`. Configured by `VITE_SUPABASE_*` env vars — when unset, the app is 100% local (free tier untouched). Upgrade path (per-record tables, Storage for photos) documented in repo `DEPLOY.md`.
+- **Supabase** (optional cloud): email+password and magic-link auth (the `/auth` page; password reset included); whole-vault JSONB snapshot with last-write-wins reconciliation (`reconcileVaults` in core); RLS via `supabase/schema.sql`. Configured by `VITE_SUPABASE_*` env vars — when unset, the app is 100% local (free tier untouched). Upgrade path (per-record tables, Storage for photos) documented in repo `DEPLOY.md`.
 - **Billing** (planned): **Premium $6/mo**, a **$3 intro for the first 3 months**, and an **occasional $3 sale**. Payment via **App Store / Play Store** on mobile and **Stripe** on the web (webhook flips the entitlement). App-level entitlement is `Settings.plan: 'free' | 'premium'`; the in-app Pricing screen flips it locally to preview premium. Handoff to Philip (needs accounts/credentials).
 - **Sync (Premium, no-backend target)**: iCloud (Apple) + Google Drive appData (Android) writing the vault snapshot to the user's own cloud; optional Supabase snapshot remains the web/desktop path. See SPEC open questions.
 - **Siri / agent (Premium, planned)**: iOS App Intents / Shortcuts + an agent-callable interface for "add goal" / "write this month".
@@ -182,6 +182,10 @@ Mirror getsu-notes conventions; global defaults in `../../knowledgebase/principl
 
 
 ## Shipped
+
+### Phase 12 — Site refresh + web auth (2026-08-07)
+- [x] **T_site_refresh** — Marketing landing rebuilt to the app's current esthetic with clear feature marketing. `site.css` tokens synced with `tokens.generated.css` (added `--surface-2`, `--accent-2`, `--grad`, the pearlescent `--pearl`, `--shadow-soft`, and a `.pearl-text` helper). `index.html`: hero now leads with a **banner** (the moon-and-months art cropped out of the OG card into `hero-art.png`; the app-icon SVG and its animation removed per Philip), a plainer one-paragraph pitch, the phone demo restyled to the current app (timeline months as big serif numbers with the pearl sheen on "this month", icon-only no-divider tab bar), and a new **"What you get"** section: four feature blocks (Timeline / monthly journal / goals on the calendar / Reflect) each with a small CSS vignette built from app tokens. JSON-LD featureList refreshed. Zero-dependency and CSP-clean as before; entrance hiding stays gated on the `.js` class with reduced-motion support. · Done: 2026-08-07 · [spec](SPEC.md#platform--growth)
+- [x] **T_web_auth** — Supabase login / create-account flow on web. `lib/supabase.ts` gains `signUpWithPassword` / `signInWithPassword` / `sendPasswordReset` beside the existing magic link. New `views/AuthView.tsx` at `#/auth`: sign in, create account (with a check-your-inbox notice when the project requires email confirmation), password reset, and a magic-link alternative, with humanized Supabase error copy; redirects to `#/account` once a session lands (the existing `useCloud` listener picks it up). `AccountView`'s signed-out state now links to `/auth` (Sign in / Create an account) instead of the old inline magic-link form. Unconfigured builds show a calm "Local only" explanation; the free tier stays account-free. Verified in the dev preview in both states (with and without `VITE_SUPABASE_*`). · Done: 2026-08-07 · [spec](SPEC.md#own-your-data--sync)
 
 ### Phase 11 — Native Phase-8 IA parity (2026-07-12)
 - [x] **T_reflect_native** — Mirrored the web Phase 8 IA on native (`apps/native`, native-view only; core ops already shared). New **Reflect** screen (`screens/ReflectScreen.tsx`) replacing the Insights tab slot: a horizontal **photo-memories rail** (`photoMemories`, tap → that month; journal-snippet fallback cards when no photos; quiet empty state) and an **offline whole-journey reflection** (`buildReflectionMaterial` + `reflectOnJourneyMock`, no AI provider on native so offline-only, no Claude button) grouped into Highlights / Areas of growth / To work on with colored dot bullets. **Insights folded into You**: extracted `InsightsPanel.tsx` (tiles + goals-across-year bars + progress) embedded atop `YouScreen`; removed `InsightsScreen.tsx`. **Timeline-first Year** (`YearScreen.tsx`): journaling-first vertical timeline — big month number (faint for future/unwritten, accent for written/current), month name, journal lead line, quiet goals + photo-count meta; kept editable theme word + add-a-goal. Tabs now Year / Goals / Reflect / You. Native typecheck + root lint/test green. · Done: 2026-07-12 · [spec](SPEC.md#reflect-surface)
