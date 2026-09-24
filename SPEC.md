@@ -173,7 +173,7 @@ Living catalog of capabilities, grouped by area. Marked `[shipped]` / `[in progr
 - **Reflection editor depth** — starting with a lightweight Markdown textarea; decide later whether a richer block editor is worth it for monthly free-form prose (likely overkill).
 - **Monthly nudge mechanism** — PWA local notification vs. email vs. native push; deferred until the platform phase.
 - **Photo storage at scale** — IndexedDB blobs / data URLs fine for demo; move to object storage (Supabase Storage, private bucket + signed URLs) before promoting "cloud photos".
-- **Supabase free-tier numbers** — verify at supabase.com/pricing before publishing plan copy (prior research was done without live web access).
+- **Supabase free-tier numbers** — verified 2026-09-24 at [supabase.com/pricing](https://supabase.com/pricing): 500 MB database, 1 GB file storage, 5 GB egress, 50k MAU, 50 MB max upload, no backups, pauses after 1 week idle, 2 active projects.
 - **AI surfaces** — reflection prompts, month auto-summary, year-in-review draft, goal→month breakdown; all later-phase, mock-mode-friendly.
 - **Sync without a backend** — preferred path is client-to-cloud with no server: **iCloud** (iCloud Drive documents or `NSUbiquitousKeyValueStore`) on Apple and **Google Drive appData** on Android, both writing the vault snapshot to the user's own cloud. If a backend proves necessary for reliability or conflict handling, fall back to the existing Supabase snapshot path. Decision to firm up when the native app reaches sync.
 - **Siri / agent integration (Premium)** — iOS App Intents / Shortcuts for "add a goal" / "write this month"; plus an agent-callable interface. Native-only; scope the intent set when the native app lands.

@@ -1,6 +1,6 @@
 # Deploying Getsu
 
-Getsu is **local-first**. The free tier needs no backend at all — it's a static site that stores everything in the browser. Cloud sync (the $2/mo tier) adds Supabase. Hosting is Vercel (the Nekko Labs default).
+Getsu is **local-first**. The free tier needs no backend at all — it's a static site that stores everything in the browser. Cloud sync (Premium, $6/mo) adds Supabase. Hosting is Vercel (the Nekko Labs default).
 
 ---
 
@@ -35,7 +35,7 @@ vercel domains add getsu.app
 
 The app stays fully functional without this. Do it only when you want to offer sync.
 
-1. **Create a Supabase project** at supabase.com (free tier is fine to start).
+1. **Create a Supabase project** at supabase.com (free tier is fine to start; free projects pause after 1 week idle).
 2. **Run the schema:** open the SQL editor and paste [`supabase/schema.sql`](supabase/schema.sql). It creates `profiles` + `vaults` with Row-Level Security and a trigger that gives every new user a `free` profile.
 3. **Enable Email auth:** Authentication → Providers → Email → enable **magic link / OTP**. (Optionally add Google/Apple OAuth later; Apple is required for a native iOS app.)
 4. **Get your keys:** Project Settings → API → copy the **Project URL** and the **anon public** key.
@@ -55,13 +55,13 @@ The app stays fully functional without this. Do it only when you want to offer s
 Sync is gated on `profiles.plan = 'cloud'`. Today that's enforced client-side; a new user is `free` by default.
 
 - **To test as the owner:** in the Supabase table editor, set your own `profiles.plan` to `cloud`. Sign in on the Account screen → your vault syncs.
-- **For real billing (later):** create a **Stripe** product at **$2/month**, add a Stripe payment link or Checkout, and a webhook that flips `profiles.plan` to `cloud` on `checkout.session.completed` (and back to `free` on cancellation). Re-verify the plan server-side (edge function / RLS join) before allowing writes for a hard paywall.
+- **For real billing (later):** create a **Stripe** product at **$6/month** ($3 intro for the first 3 months), add a Stripe payment link or Checkout, and a webhook that flips `profiles.plan` to `cloud` on `checkout.session.completed` (and back to `free` on cancellation). Re-verify the plan server-side (edge function / RLS join) before allowing writes for a hard paywall.
 
 ---
 
 ## What's free vs. what's paid
 
-| | Free (local) | Cloud — $2/mo |
+| | Free (local) | Premium — $6/mo |
 |---|---|---|
 | All surfaces, unlimited entries/goals/trackers | ✅ | ✅ |
 | Photos | on device | synced cloud storage |
@@ -79,4 +79,4 @@ Free is never crippled — sync is a convenience, not a hostage.
 
 - **Photos in the snapshot:** the MVP sync stores the whole vault (including photo data URLs) as one JSONB row. Before promoting cloud photos, move images to **Supabase Storage** (private bucket, path `user_id/...`, signed URLs) and keep only the path in the vault. Watch the free tier's storage/egress limits.
 - **Per-record sync:** the current strategy is whole-vault last-write-wins (great for one user across devices). For shared/multi-user journals, split into per-entity tables with per-row `updated_at`.
-- **Verify Supabase free-tier limits** at supabase.com/pricing before publishing plan copy.
+- **Supabase free tier** (verified 2026-09-24, [supabase.com/pricing](https://supabase.com/pricing)): 500 MB database, 1 GB file storage, 5 GB egress, 50k MAU, 50 MB max upload, no backups, pauses after 1 week idle, 2 active projects.
