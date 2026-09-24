@@ -55,7 +55,7 @@ The app stays fully functional without this. Do it only when you want to offer s
 Sync is gated on `profiles.plan = 'cloud'`. Today that's enforced client-side; a new user is `free` by default.
 
 - **To test as the owner:** in the Supabase table editor, set your own `profiles.plan` to `cloud`. Sign in on the Account screen → your vault syncs.
-- **For real billing (later):** create a **Stripe** product at **$6/month** ($3 intro for the first 3 months), add a Stripe payment link or Checkout, and a webhook that flips `profiles.plan` to `cloud` on `checkout.session.completed` (and back to `free` on cancellation). Re-verify the plan server-side (edge function / RLS join) before allowing writes for a hard paywall.
+- **For real billing (later):** create a **Stripe** product at **$6/month** ($3 intro for the first 3 months; occasional $3 sale via coupon), add a Stripe payment link or Checkout, and a webhook that flips `profiles.plan` to `cloud` on `checkout.session.completed` (and back to `free` on cancellation). Re-verify the plan server-side (edge function / RLS join) before allowing writes for a hard paywall.
 
 ---
 
