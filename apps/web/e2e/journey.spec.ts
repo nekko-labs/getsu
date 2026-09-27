@@ -57,8 +57,7 @@ test('ai settings: a retired stored model falls back to the default', async ({ p
   });
   await page.goto('/#/ai');
 
-  // The selected model is the only one with an accent outline.
-  const selected = page.getByRole('button', { name: /^Claude / }).and(page.locator('[style*="outline: 1px solid"]'));
+  const selected = page.getByRole('button', { name: /^Claude /, pressed: true });
   await expect(selected).toHaveCount(1);
   await expect(selected).toHaveText(/Claude Opus 5\.5/);
 });

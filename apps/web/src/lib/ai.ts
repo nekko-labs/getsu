@@ -44,7 +44,7 @@ export function getStoredModel(): string {
     const stored = localStorage.getItem(MODEL_STORAGE);
     // A model that's no longer offered (a retired default, a hand-edited value)
     // falls back, so the picker never renders with nothing selected.
-    return MODELS.some((m) => m.id === stored) ? stored! : DEFAULT_MODEL;
+    return MODELS.find((m) => m.id === stored)?.id ?? DEFAULT_MODEL;
   } catch {
     return DEFAULT_MODEL;
   }

@@ -56,6 +56,7 @@ export default function AIView() {
             <button
               key={m.id}
               onClick={() => setModel(m.id)}
+              aria-pressed={on}
               className="flex items-center justify-between rounded-xl px-3.5 py-3 text-left text-[14px] transition"
               style={{ background: on ? 'var(--accent-soft)' : 'var(--surface-2)', color: on ? 'var(--accent)' : 'var(--text)', outline: on ? '1px solid var(--accent)' : 'none' }}
             >
