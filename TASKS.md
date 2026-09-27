@@ -26,7 +26,7 @@ Decided — mirrors getsu-notes; **do not relitigate**.
 - **Shared types** (`packages/shared`): types + contracts shared by web/core/native.
 - **Storage / local-first**: a **vault = a folder of files**. Web uses the **File System Access API** (Chromium) to open a real local folder; falls back to **IndexedDB** (via `idb`) and ships with seeded demo data so the app is alive on first run with zero setup.
 - **Photos**: stored under `media/`; in IndexedDB-mode stored as blobs (data URLs today). Drag/drop or file-picker upload; thumbnails generated client-side.
-- **Cloud (optional)**: **Supabase** (cloud DB) + **Vercel** (hosting) — the Nekko Labs default stack (Philip's org-wide call). Free tier is fully local-first (no account); Cloud sync is paid (~$2/mo) on Supabase, hosted on Vercel.
+- **Cloud (optional)**: **Supabase** (cloud DB) + **Vercel** (hosting) — the Nekko Labs default stack (Philip's org-wide call). Free tier is fully local-first (no account); Cloud sync is Premium ($6/mo) on Supabase, hosted on Vercel.
 - **AI** (later phase): provider-agnostic, **default Claude**. Use cases: monthly-reflection prompts/journaling assistant, auto-summarize a month, draft a year-in-review, suggest goal breakdowns. Graceful mock mode when no key set. BYO key stored locally.
 - **Native** (`apps/native`, later phase): **Expo + React Native**, sharing `packages/core` + `packages/shared`.
 - **No native node modules.** Cross-platform, **Windows-first** dev.
