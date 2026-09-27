@@ -1,13 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Sparkles, Check } from 'lucide-react';
-import { getStoredKey, setStoredKey, getStoredModel, setStoredModel } from '../lib/ai';
-
-const MODELS = [
-  { id: 'claude-opus-4-8', label: 'Claude Opus 4.8 (most capable)' },
-  { id: 'claude-sonnet-5', label: 'Claude Sonnet 5 (faster, cheaper)' },
-  { id: 'claude-haiku-4-5', label: 'Claude Haiku 4.5 (fastest)' },
-];
+import { getStoredKey, setStoredKey, getStoredModel, setStoredModel, MODELS } from '../lib/ai';
 
 export default function AIView() {
   const navigate = useNavigate();

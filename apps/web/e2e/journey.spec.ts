@@ -49,6 +49,20 @@ test('journaling assist: offline reflection prompts insert into the entry', asyn
   await expect(page.locator('textarea')).toContainText(promptText.slice(0, 15));
 });
 
+test('ai settings: a retired stored model falls back to the default', async ({ page }) => {
+  await skipOnboarding(page);
+  // Opus 4.8 was the old default and is no longer offered.
+  await page.addInitScript(() => {
+    try { localStorage.setItem('getsu-ai-model', 'claude-opus-4-8'); } catch { /* ignore */ }
+  });
+  await page.goto('/#/ai');
+
+  // The selected model is the only one with an accent outline.
+  const selected = page.getByRole('button', { name: /^Claude / }).and(page.locator('[style*="outline: 1px solid"]'));
+  await expect(selected).toHaveCount(1);
+  await expect(selected).toHaveText(/Claude Opus 5\.5/);
+});
+
 test('goals: add a goal for the year', async ({ page }) => {
   await skipOnboarding(page);
   await page.goto('/#/goals/2026');
