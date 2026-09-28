@@ -1,13 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Sparkles, Check } from 'lucide-react';
-import { getStoredKey, setStoredKey, getStoredModel, setStoredModel } from '../lib/ai';
-
-const MODELS = [
-  { id: 'claude-opus-4-8', label: 'Claude Opus 4.8 (most capable)' },
-  { id: 'claude-sonnet-5', label: 'Claude Sonnet 5 (faster, cheaper)' },
-  { id: 'claude-haiku-4-5', label: 'Claude Haiku 4.5 (fastest)' },
-];
+import { getStoredKey, setStoredKey, getStoredModel, setStoredModel, MODELS } from '../lib/ai';
 
 export default function AIView() {
   const navigate = useNavigate();
@@ -62,6 +56,7 @@ export default function AIView() {
             <button
               key={m.id}
               onClick={() => setModel(m.id)}
+              aria-pressed={on}
               className="flex items-center justify-between rounded-xl px-3.5 py-3 text-left text-[14px] transition"
               style={{ background: on ? 'var(--accent-soft)' : 'var(--surface-2)', color: on ? 'var(--accent)' : 'var(--text)', outline: on ? '1px solid var(--accent)' : 'none' }}
             >
