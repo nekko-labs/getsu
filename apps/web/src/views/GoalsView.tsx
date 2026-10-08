@@ -153,7 +153,7 @@ export default function GoalsView() {
       {planned.length === 0 ? (
         <p className="text-sm italic" style={{ color: 'var(--text-faint)' }}>
           Nothing planned yet. Drag goals onto months from the{' '}
-          <button onClick={() => navigate(`/year/${year}`)} className="underline" style={{ color: 'var(--accent)' }}>year board</button>.
+          <button onClick={() => navigate(`/year/${year}?zoom=grid`)} className="underline" style={{ color: 'var(--accent)' }}>year board</button>.
         </p>
       ) : (
         <div className="flex flex-col">
@@ -179,7 +179,7 @@ export default function GoalsView() {
             ))}
           </div>
           <p className="mt-4 text-[12px] italic" style={{ color: 'var(--text-faint)' }}>
-            Open the <button onClick={() => navigate(`/year/${year}`)} className="underline" style={{ color: 'var(--accent)' }}>year board</button> and drag these onto the months where they'll happen.
+            Open the <button onClick={() => navigate(`/year/${year}?zoom=grid`)} className="underline" style={{ color: 'var(--accent)' }}>year board</button> and drag these onto the months where they'll happen.
           </p>
         </>
       )}

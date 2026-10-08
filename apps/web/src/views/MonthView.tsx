@@ -158,7 +158,7 @@ export default function MonthView() {
         {goals.length === 0 ? (
           <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-faint)' }}>
             No goals here yet. Drag some in from the{' '}
-            <button onClick={() => navigate(`/year/${year}`)} className="underline" style={{ color: 'var(--accent)' }}>year board</button>.
+            <button onClick={() => navigate(`/year/${year}?zoom=grid`)} className="underline" style={{ color: 'var(--accent)' }}>year board</button>.
           </p>
         ) : (
           <div className="flex flex-col gap-6">
