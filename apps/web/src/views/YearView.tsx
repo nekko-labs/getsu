@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type DragEvent } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ChevronRight, Plus, Camera } from 'lucide-react';
 import {
@@ -35,8 +35,15 @@ export default function YearView() {
   const goals = yearObj?.goals ?? EMPTY_GOALS;
   const themeWord = yearObj?.theme ?? '';
 
+  const [searchParams] = useSearchParams();
+
   // Timeline is the calm default: a clean, journaling-first scroll of the year.
-  const [zoom, setZoom] = useState<Zoom>('list');
+  // `?zoom=` is an arrival hint only: the "year board" links exist to get goals
+  // onto months, which only the grid can do. Never written back to the URL.
+  const [zoom, setZoom] = useState<Zoom>(() => {
+    const raw = searchParams.get('zoom');
+    return ZOOM_ORDER.includes(raw as Zoom) ? (raw as Zoom) : 'list';
+  });
   const [zoomDir, setZoomDir] = useState<'in' | 'out'>('in');
   // 0 until the user first changes zoom level; the initial mount plays the
   // month-cell cascade instead of the semantic-zoom animation, which only
